@@ -206,12 +206,6 @@ namespace WindowsFormsApplication1
 
         private void GetAudioFileDetails(out int bitrate, out int length)
         {
-            //AviManager aviManager = new AviManager(txtAudio.Text, false);
-            //AudioStream waveStream = aviManager.GetWaveStream();
-            //string a = "\r\nSamples per Second: " + waveStream.CountSamplesPerSecond.ToString();
-            //string b = "\r\nBits per Sample: " + waveStream.CountBitsPerSample.ToString();
-            //string c = "\r\nChannels: " + waveStream.CountChannels.ToString();
-
             using (var f = File.OpenRead(txtAudio.Text))
             {
                 f.Seek(28, SeekOrigin.Begin);
