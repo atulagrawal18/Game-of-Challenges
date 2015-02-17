@@ -17,9 +17,9 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
-            txtVideo.Text = @"D:\challenge\AudioToVideo\testdata\sample.avi";
-            txtAudio.Text = @"D:\challenge\AudioToVideo\testdata\Enrique_Iglesias-_Rhythm_Divine.wav";
-            txtSubtitle.Text = @"D:\challenge\AudioToVideo\testdata\subtitle.srt";
+            txtVideo.Text = @"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\sample.avi";
+            txtAudio.Text = @"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\Enrique_Iglesias-_Rhythm_Divine.wav";
+            txtSubtitle.Text = @"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\subtitle.srt";
         }
 
         private void addSound()
@@ -92,17 +92,10 @@ namespace WindowsFormsApplication1
             Brush textBrush = new SolidBrush(Color.White);
 
             drawing.DrawString("", stringFont, textBrush, 0, 0);
-
-            //drawing.Save();
-
-            //textBrush.Dispose();
-            //drawing.Dispose();
-
-            //Bitmap bmp = (Bitmap)Image.FromFile(file);
             AviManager aviManager = new AviManager(txtVideo.Text, false);
             VideoStream aviStream = aviManager.AddVideoStream(true, Properties.Settings.Default.fps, img);
 
-            img.Save("D:\\challenge\\AudioToVideo\\testdata\\FirstFrame.bmp");
+            img.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FirstFrame.bmp");
 
             Bitmap bitmap = (Bitmap)img;
             Bitmap emptyFrame = (Bitmap)img;
@@ -126,7 +119,7 @@ namespace WindowsFormsApplication1
 
                 int emptyFrameCount = (int)((s.StartTime - lastVerifiedTime).TotalMilliseconds * Properties.Settings.Default.fps / 1000);
 
-                File.AppendAllText("D:\\challenge\\AudioToVideo\\testdata\\FramesCount.txt",n.ToString()+": "+emptyFrameCount.ToString()+"\n");
+                File.AppendAllText(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FramesCount.txt",n.ToString()+": "+emptyFrameCount.ToString()+"\n");
 
                 while(emptyFrameCount-- != 0)
                     aviStream.AddFrame(emptyFrame, false);
@@ -134,7 +127,7 @@ namespace WindowsFormsApplication1
                 lastVerifiedTime = s.EndTime;
 
                 int frameCount = (int)((s.EndTime - s.StartTime).TotalMilliseconds * Properties.Settings.Default.fps / 1000);
-                File.AppendAllText("D:\\challenge\\AudioToVideo\\testdata\\FramesCount.txt", n.ToString() + ": " + frameCount.ToString()+"\n");
+                File.AppendAllText(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FramesCount.txt", n.ToString() + ": " + frameCount.ToString()+"\n");
                 
                 int d = frameCount / s.Lyrics.Single().Length;
 
@@ -163,7 +156,7 @@ namespace WindowsFormsApplication1
                         startIndex += 32;
                         drawing.Save();
                         bitmap = (Bitmap)img;
-                        //bitmap.Save("D:\\challenge\\AudioToVideo\\testdata\\FrameHalf" + i + ".bmp");
+                        //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FrameHalf" + i + ".bmp");
                         if (strLength > 0)
                         innerLoopCounter++;
                     }
@@ -171,7 +164,7 @@ namespace WindowsFormsApplication1
                     outerLoopCounter = 0;
                     innerLoopCounter = 0;
 
-                    //bitmap.Save("D:\\challenge\\AudioToVideo\\testdata\\FrameFull" + n + ".bmp");
+                    //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FrameFull" + n + ".bmp");
                     bitmap = new Bitmap(img);
                     
                     if ((((i / 10) % 10) % 2) == 0)
@@ -181,7 +174,7 @@ namespace WindowsFormsApplication1
                     aviStream.AddFrame(bitmap, flag);
                     drawing.Dispose();
                 }
-                //bitmap.Save("D:\\challenge\\AudioToVideo\\testdata\\Frame" + n + ".bmp");
+                //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\Frame" + n + ".bmp");
                 bitmap.Dispose();
                 img.Dispose();
             }
@@ -200,7 +193,7 @@ namespace WindowsFormsApplication1
 
             int emptyFrameCountEnd = (int)((length - (lastVerifiedTime.Hour * 3600 + lastVerifiedTime.Minute * 60 + lastVerifiedTime.Second)) * Properties.Settings.Default.fps);
 
-            File.AppendAllText("D:\\challenge\\AudioToVideo\\testdata\\FramesCount.txt", subtitles.Count.ToString() + ": " + emptyFrameCountEnd.ToString() + "\n");
+            File.AppendAllText(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FramesCount.txt", subtitles.Count.ToString() + ": " + emptyFrameCountEnd.ToString() + "\n");
 
             while (emptyFrameCountEnd-- != 0)
                 aviStream.AddFrame(bitmap, false);
