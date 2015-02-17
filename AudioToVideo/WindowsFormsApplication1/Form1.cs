@@ -133,6 +133,7 @@ namespace WindowsFormsApplication1
 
                 int outerLoopCounter = 0;
                 int innerLoopCounter = 0;
+                bool IsJumpChar = true;
                 for (int i = 0; i < frameCount; i++)//, outerLoopCounter++, innerLoopCounter++)
                 {
                     //ResetImage(img, drawing, bitmap, textSize);
@@ -148,10 +149,23 @@ namespace WindowsFormsApplication1
                     int strLength = s.Lyrics.Single().Length;
                     int startIndex = 0;
                     float firstCoordinate = 0.0f;
-                    
+
+                    outerLoopCounter = 0;
+                    if (i >= 32 * d)
+                    {
+                        if (s.Lyrics.Single().Length <= 32)
+                            IsJumpChar = false;
+                        else
+                            innerLoopCounter = -1;
+                    }
+                    else
+                    {
+                        innerLoopCounter = 0;
+                    }
+
                     while (strLength > 0)
                     {
-                        firstCoordinate = MeasureCharacterRangesRegions(drawing, s.Lyrics.Single().Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, count/2, count%2*10+10, outerLoopCounter == innerLoopCounter);
+                        firstCoordinate = MeasureCharacterRangesRegions(drawing, s.Lyrics.Single().Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, count/2, count%2*10+10, outerLoopCounter == innerLoopCounter && IsJumpChar);
                         strLength -= 32;
                         startIndex += 32;
                         drawing.Save();
@@ -160,10 +174,7 @@ namespace WindowsFormsApplication1
                         if (strLength > 0)
                         innerLoopCounter++;
                     }
-
-                    outerLoopCounter = 0;
-                    innerLoopCounter = 0;
-
+                    
                     //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FrameFull" + n + ".bmp");
                     bitmap = new Bitmap(img);
                     
