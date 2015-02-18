@@ -69,7 +69,7 @@ namespace Game_of_Typography
 
             Brush textBrush = new SolidBrush(Color.White);
 
-            drawing.DrawString("Escucha el ritmo de tu corazon", stringFont, textBrush, 0, 0);
+            drawing.DrawString("", stringFont, textBrush, 0, 0);
             drawing.Save();
             
             
