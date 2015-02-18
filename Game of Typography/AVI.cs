@@ -98,14 +98,10 @@ namespace Game_of_Typography
                 drawing = Graphics.FromImage(img);
                 stringFont = new Font("Arial", curvedTextConfig.FontSize);
                 img.Dispose();
-               
 
                 img = new Bitmap((int)textSize.Width, (int)textSize.Height);
                 drawing = Graphics.FromImage(img);
                 drawing.Clear(Color.Red);
-
-                Point c = new Point((int)(textSize.Width / 2), (int)(textSize.Height / 2));
-                CurvedTextEffects.DrawCurvedText(drawing, s.Lyrics.Single(), c, 120, (float)90, stringFont, textBrush);
                 drawing.Save();
 
                 bitmap = (Bitmap)img;
@@ -120,9 +116,7 @@ namespace Game_of_Typography
 
                     //stringFont = new Font("Arial", i+16);
                     drawing = Graphics.FromImage(bitmap);
-                    c = new Point((int)(textSize.Width / 2), (int)(textSize.Height / 2));
-                    CurvedTextEffects.DrawCurvedText(drawing, s.Lyrics.Single(), c, 120, (float)90, stringFont, textBrush);
-
+                    CurveEffect(drawing, s.Lyrics.Single(), stringFont, textBrush, textSize);
                     drawing.Save();
 
                     aviStream.AddFrame(bitmap);
@@ -134,6 +128,12 @@ namespace Game_of_Typography
             }
             aviManager.Close();
             addSound(fps);
+        }
+
+        public void CurveEffect(Graphics drawing, string s, Font stringFont, Brush textBrush, SizeF textSize)
+        {
+            Point c = new Point((int)(textSize.Width / 2), (int)(textSize.Height / 2));
+            CurvedTextEffects.DrawCurvedText(drawing, s, c, 120, (float)45, stringFont, textBrush);
         }
     }
 }

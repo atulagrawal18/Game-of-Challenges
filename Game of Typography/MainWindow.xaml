@@ -72,7 +72,8 @@
                     </Grid.RowDefinitions>
                     <Label Content="Select Text Effect" Grid.Row="0" HorizontalAlignment="Left"></Label>
                     <ComboBox Name="cmbTextEffect" Height="20" Width="150" HorizontalAlignment="Left" Margin="136,0,0,10" SelectionChanged="cmbTextEffect_SelectionChanged">
-                        <ComboBoxItem>Curved Text</ComboBoxItem>
+                        <ComboBoxItem>Curved Text Effect</ComboBoxItem>
+                        <ComboBoxItem>Bounce Text Effect</ComboBoxItem>
                     </ComboBox>
                     <Button Name="btnConfig" Width="120" Grid.Row="1"  Click="btnConfig_Click" Height="24" VerticalAlignment="Top">Configure</Button>
                     <Button Name="btnCreateVideo" Click="btnCreateVideo_Click" Width="100" Content="Create Video" Grid.Row="2" HorizontalAlignment="Left" Margin="157,0,0,0">
