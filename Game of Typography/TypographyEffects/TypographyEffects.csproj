@@ -62,6 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BounceTextEffect.cs" />
+    <Compile Include="BounceTextEffectConfig.cs" />
+    <Compile Include="BounceTextConfig.xaml.cs">
+      <DependentUpon>BounceTextConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CurvedTextConfig.xaml.cs">
       <DependentUpon>CurvedTextConfig.xaml</DependentUpon>
     </Compile>
@@ -93,6 +97,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="BounceTextConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CurvedTextConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

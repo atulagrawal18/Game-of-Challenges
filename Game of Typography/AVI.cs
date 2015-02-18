@@ -39,12 +39,24 @@ namespace Game_of_Typography
             }
         }
 
-        public void CreateVideo(FilePaths fps, double frameRate, TextEffectConfig config)
+        public void CreateVideo(FilePaths fps, double frameRate, TextEffectConfig config, TextEffect textEffect)
         {
             if (File.Exists(fps.VideoPath))
                 File.Delete(fps.VideoPath);
 
-            CurvedTextEffectConfig curvedTextConfig = (CurvedTextEffectConfig)config;
+            CurvedTextEffectConfig curvedTextConfig;
+            BounceTextEffectConfig bounceTextConfig;
+            Font stringFont =  new Font("Arial", 16);;
+            if(textEffect == TextEffect.CurvedTextEffect)
+            {
+                curvedTextConfig = (CurvedTextEffectConfig)config;
+                stringFont = new Font("Arial", curvedTextConfig.FontSize);
+            }
+            else if (textEffect == TextEffect.BouncingTextEffect)
+            {
+                bounceTextConfig = (BounceTextEffectConfig)config;
+                stringFont = new Font("Arial", bounceTextConfig.FontSize);
+            }
 
             DateTime lastVerifiedTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 0);
 
@@ -52,12 +64,12 @@ namespace Game_of_Typography
             Subtitles.SubtitlesUtility.ParseSubtitle(out subtitles, fps.SrtPath);
 
             int length, bitrate;
-            GetAudioFileDetails(out bitrate, out length);
+            GetAudioFileDetails(out bitrate, out length, fps);
 
             Bitmap img = new Bitmap(1, 1);
             Graphics drawing = Graphics.FromImage(img);
 
-            Font stringFont = new Font("Arial", curvedTextConfig.FontSize);
+           
             SizeF textSize = drawing.MeasureString("I will follow you wherever you may be           ", stringFont);
             textSize.Height = 400;
             textSize.Width = 800;
@@ -99,7 +111,7 @@ namespace Game_of_Typography
 
                 img = new Bitmap(1, 1);
                 drawing = Graphics.FromImage(img);
-                stringFont = new Font("Arial", curvedTextConfig.FontSize);
+               // stringFont = new Font("Arial", config.FontSize);
                 img.Dispose();
 
                 img = new Bitmap((int)textSize.Width, (int)textSize.Height);
@@ -128,20 +140,15 @@ namespace Game_of_Typography
                     drawing.Clear(Color.Red);
                     bitmap = (Bitmap)img;
 
-                    //TODO: make a switch case block which will tell us which effect to use.
-                    //For this we will keep a list of constants and then map them with all the effect from the drop down list in UI
-                    //It would look something like
 
-                    //switch(constants.effect)
-                    //{
-                    //  case constants.curveeffect:
-                        //CurveEffect(drawing, s.Lyrics.Single(), stringFont, textBrush, textSize);
-                    //break;
-                    //case constants.bounceeffect:
-                        
-
-                    BounceEffect(drawing, i, s.Lyrics.Single(), d);
-                    //break;
+                    if (textEffect == TextEffect.CurvedTextEffect)
+                    {
+                        CurveEffect(drawing, s.Lyrics.Single(), stringFont, textBrush, textSize);
+                    }
+                    else if (textEffect == TextEffect.BouncingTextEffect)
+                    {
+                        BounceEffect(drawing, i, s.Lyrics.Single(), d);
+                    }
 
                     //}
                     
@@ -168,7 +175,7 @@ namespace Game_of_Typography
 
             int emptyFrameCountEnd = (int)((length - (lastVerifiedTime.Hour * 3600 + lastVerifiedTime.Minute * 60 + lastVerifiedTime.Second)) * frameRate);
 
-            File.AppendAllText(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FramesCount.txt", subtitles.Count.ToString() + ": " + emptyFrameCountEnd.ToString() + "\n");
+           // File.AppendAllText(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FramesCount.txt", subtitles.Count.ToString() + ": " + emptyFrameCountEnd.ToString() + "\n");
 
             while (emptyFrameCountEnd-- != 0)
                 aviStream.AddFrame(bitmap);
@@ -227,9 +234,9 @@ namespace Game_of_Typography
                 return b;
         }
 
-        private void GetAudioFileDetails(out int bitrate, out int length)
+        private void GetAudioFileDetails(out int bitrate, out int length, FilePaths fps)
         {
-            using (var f = File.OpenRead(txtAudio.Text))
+            using (var f = File.OpenRead(fps.AudioPath))
             {
                 f.Seek(28, SeekOrigin.Begin);
                 byte[] val = new byte[4];

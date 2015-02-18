@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TypographyEffects
 {
-   public class TextEffectConfig
+   public class BounceTextEffectConfig : TextEffectConfig
     {
        public int FontSize { get; set; }
     }

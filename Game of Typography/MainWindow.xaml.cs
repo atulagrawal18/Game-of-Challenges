@@ -172,8 +172,18 @@ namespace Game_of_Typography
             txtVideoStatus.Visibility = Visibility.Visible;
             txtVideoStatus.Text = "Creating Video..........";
 
+            TextEffect te = (TextEffect)cmbTextEffect.SelectedIndex;
 
-            avi.CreateVideo(fp, 30, config);
+            if (te == TextEffect.CurvedTextEffect)
+            {
+                avi.CreateVideo(fp, 30, curvedTextConfig, te);
+            }
+            else if (te == TextEffect.BouncingTextEffect)
+            {
+                avi.CreateVideo(fp, 30, bounceTextConfig, te);
+            }
+
+            
             txtVideoStatus.Text = "Video Created..........";
         }
 
@@ -188,12 +198,39 @@ namespace Game_of_Typography
             window.Width = 400;
             window.Height = 400;
 
+
+            TextEffect textEffect = (TextEffect)cmbTextEffect.SelectedIndex;
+
+            if (textEffect == TextEffect.CurvedTextEffect)
+            {
+                window.Content = new CurvedTextConfig();
+            }
+            else if (textEffect == TextEffect.BouncingTextEffect)
+            {
+                window.Content = new BounceTextConfig();
+            }
+
             window.ShowDialog();
-            CurvedTextConfig c = (CurvedTextConfig)window.Content;
-            config.FontSize = c.TextFontSize;
+
+            if (textEffect == TextEffect.CurvedTextEffect)
+            {
+                CurvedTextConfig c = (CurvedTextConfig)window.Content;
+                curvedTextConfig.FontSize = c.TextFontSize;
+            }
+            else if (textEffect == TextEffect.BouncingTextEffect)
+            {
+                BounceTextConfig c = (BounceTextConfig)window.Content;
+                bounceTextConfig.FontSize = c.TextFontSize;
+            }
+
+           
+            
 
         }
-         CurvedTextEffectConfig config = new CurvedTextEffectConfig();
+        TextEffectConfig config = new TextEffectConfig();
+        CurvedTextEffectConfig curvedTextConfig = new CurvedTextEffectConfig();
+        BounceTextEffectConfig bounceTextConfig = new BounceTextEffectConfig();
+         
 
          private void btnConfig_Click(object sender, RoutedEventArgs e)
          {
@@ -205,10 +242,31 @@ namespace Game_of_Typography
              window.Width = 400;
              window.Height = 400;
 
+
+             TextEffect textEffect = (TextEffect)cmbTextEffect.SelectedIndex;
+
+             if (textEffect == TextEffect.CurvedTextEffect)
+             {
+                 window.Content = new CurvedTextConfig();
+             }
+             else if (textEffect == TextEffect.BouncingTextEffect)
+             {
+                 window.Content = new BounceTextConfig();
+             }
+
              window.ShowDialog();
-             CurvedTextConfig c = (CurvedTextConfig)window.Content;
-             config.FontSize = c.TextFontSize;
-             config.DistanceFromCentreToBaseOfText = c.DistanceFromCentreToBaseOfText;
+
+             if (textEffect == TextEffect.CurvedTextEffect)
+             {
+                 CurvedTextConfig c = (CurvedTextConfig)window.Content;
+                 curvedTextConfig.FontSize = c.TextFontSize;
+             }
+             else if (textEffect == TextEffect.BouncingTextEffect)
+             {
+                 BounceTextConfig c = (BounceTextConfig)window.Content;
+                 bounceTextConfig.FontSize = c.TextFontSize;
+             }
+
          }
             
     }
