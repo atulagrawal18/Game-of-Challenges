@@ -116,7 +116,22 @@ namespace Game_of_Typography
 
                     //stringFont = new Font("Arial", i+16);
                     drawing = Graphics.FromImage(bitmap);
-                    CurveEffect(drawing, s.Lyrics.Single(), stringFont, textBrush, textSize);
+
+                    //TODO: make a switch case block which will tell us which effect to use.
+                    //For this we will keep a list of constants and then map them with all the effect from the drop down list in UI
+                    //It would look something like
+
+                    //switch(constants.effect)
+                    //{
+                    //  case constants.curveeffect:
+                        CurveEffect(drawing, s.Lyrics.Single(), stringFont, textBrush, textSize);
+                    //break;
+                    //case constants.bounceeffect:
+                    //bouneeffect();
+                    //break;
+
+                    //}
+                    
                     drawing.Save();
 
                     aviStream.AddFrame(bitmap);
