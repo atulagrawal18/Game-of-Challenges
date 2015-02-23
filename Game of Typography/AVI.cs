@@ -129,6 +129,12 @@ namespace Game_of_Typography
                 if (d == 1)
                     d = 2;
 
+                string[] words = s.Lyrics.Single().ToString().Split(' ');
+                int numberOfFrmaePerWord = frameCount / words.Length;
+                int currentIndexOfWord = 0;
+                float X = textSize.Width / 10, Y = textSize.Height / 2;
+                Bitmap savedFrame = new Bitmap(img);
+
                 for (int i = 0; i < frameCount; i++)
                 {
                     img.Dispose();
@@ -140,21 +146,72 @@ namespace Game_of_Typography
                     drawing.Clear(Color.Red);
                     bitmap = (Bitmap)img;
 
+                    //Bitmap savedFrame = new Bitmap(img);
 
                     if (textEffect == TextEffect.CurvedTextEffect)
                     {
-                        CurveEffect(drawing, s.Lyrics.Single(), stringFont, textBrush, textSize);
+                        CurveEffect(drawing, s.Lyrics.Single(), stringFont, textBrush, textSize, i);
                     }
                     else if (textEffect == TextEffect.BouncingTextEffect)
                     {
                         BounceEffect(drawing, i, s.Lyrics.Single(), d);
                     }
+                    else if (textEffect == TextEffect.AlternateLetterUpAndDownEffect)
+                    {
+                        AlternateLetterUpAndDownEffect(drawing, i, s.Lyrics.Single());
+                    }
+                    else if (textEffect == TextEffect.AngledTextEffect)
+                    {
+                        var characterWidths = GetCharacterWidths(drawing, s.Lyrics.Single(), stringFont).ToArray();
+                        var textLength = characterWidths.Sum();
 
-                    //}
-                    
+                        X = (textSize.Width - textLength) / 2;
+                        Y = textSize.Height / 2;
+                        if (i <= frameCount * 6 / 10)
+                            AngledTextEffect.DrawAtAnAngleTextOfCenterAtCenterOfScreen(drawing, textSize, s.Lyrics.Single(), i, stringFont);
+                        else
+                            DrawTextAtCenter(drawing, textSize, s.Lyrics.Single(), i);
+                    }
+                    else if (textEffect == TextEffect.MoveRightWithFirstFrameFreezedTextEffect)
+                    {
+                        MoveRightTextEffect.MoveRightWithFirstFrameFreezed(drawing, textSize, s.Lyrics.Single(), X, Y, i, stringFont);
+                    }
+                    else if (textEffect == TextEffect.MoveRightWithZoomEffect)
+                    {
+                        MoveRightTextEffect.MoveRightWithZoom(drawing, textSize, s.Lyrics.Single(), X, Y, i, stringFont);
+                    }
+                    else if (textEffect == TextEffect.ThreeWordTextEffect)
+                    {
+                        int count = i % (32 * d);
+                        int counter = numberOfFrmaePerWord;
+                        if (currentIndexOfWord < words.Length)
+                        {
+                            PopulateWordEffect(drawing, numberOfFrmaePerWord, currentIndexOfWord, words, textSize, count, i);
+                            while (counter > 0 && i < frameCount)
+                            {
+                                counter--;
+                                i++;
+                                aviStream.AddFrame(bitmap);
+                            }
+                            //i--;
+                            //savedFrame = bitmap;
+
+                            while (currentIndexOfWord == words.Length-1 && i < frameCount)
+                            {
+                                i++;
+                                bitmap.Save(@"D:\Game of Challenges\AudioToVideo\AudioToVideo\testdata\FrameFull" + i + ".bmp");
+                                aviStream.AddFrame(bitmap);
+                            }
+                            i--;
+                        }
+                        currentIndexOfWord++;
+                    }
+
                     drawing.Save();
 
-                    aviStream.AddFrame(bitmap);
+                    if (textEffect != TextEffect.ThreeWordTextEffect)
+                        aviStream.AddFrame(bitmap);
+
                     bitmap.Dispose();
                     drawing.Dispose();
                 }
@@ -185,10 +242,11 @@ namespace Game_of_Typography
             addSound(fps);
         }
 
-        public void CurveEffect(Graphics drawing, string s, Font stringFont, Brush textBrush, SizeF textSize)
+        public void CurveEffect(Graphics drawing, string s, Font stringFont, Brush textBrush, SizeF textSize, int i)
         {
-            Point c = new Point((int)(textSize.Width / 2), (int)(textSize.Height / 2));
-            CurvedTextEffects.DrawCurvedText(drawing, s, c, 120, (float)45, stringFont, textBrush);
+            float f = (float)45.0 + (float)i/30;
+            Point c = new Point((int)(textSize.Width / 2), 0);// (int)(textSize.Height / 2));
+            CurvedTextEffects.DrawCurvedText(drawing, s, c, 250, f/*(float)45*/, stringFont, textBrush);
         }
 
         public void BounceEffect(Graphics drawing, int i, string s, int d)
@@ -234,6 +292,21 @@ namespace Game_of_Typography
                 return b;
         }
 
+        public void AlternateLetterUpAndDownEffect(Graphics drawing, int i, string s)
+        {
+            int strLength = s.Length;
+            int startIndex = 0;
+            float firstCoordinate = 0.0f;
+
+            while (strLength > 0)
+            {
+                firstCoordinate = AlternateLetterUpAndDownTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i);
+                strLength -= 32;
+                startIndex += 32;
+                drawing.Save();
+            }
+        }
+
         private void GetAudioFileDetails(out int bitrate, out int length, FilePaths fps)
         {
             using (var f = File.OpenRead(fps.AudioPath))
@@ -244,6 +317,105 @@ namespace Game_of_Typography
                 bitrate = (8 * BitConverter.ToInt32(val, 0)) / 1000;
                 length = (int)(f.Length / BitConverter.ToInt32(val, 0));
             }
+        }
+
+        public void DrawTextAtCenter(Graphics drawing, SizeF textSize, string text, int i)
+        {
+            float j = (float)i / (float)8.0;
+            float k = (float)j;
+            if (i % 4 == 1)
+                k += (float)0.1;
+            else if (i % 4 == 2)
+                k += (float)0.2;
+            else if (i % 4 == 3)
+                k += (float)0.3;
+
+            float X, Y;
+
+            //Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize + k);
+            Font stringFont = new Font("Arial", (Math.Abs((float)40.0 - (float)(i + 1)) == 0) ? 1 : Math.Abs((float)40.0 - (float)(i + 1)));
+            Brush textBrush = new SolidBrush(Color.White);
+
+            var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
+            var textLength = characterWidths.Sum();
+
+            X = (textSize.Width - textLength) / 2;
+            Y = textSize.Height / 2;
+
+            //drawing.DrawString(text, stringFont, textBrush, X, Y);
+            drawing.DrawString(text, stringFont, textBrush, new Point((int)(X), (int)Y), StringFormat.GenericTypographic);
+
+            drawing.Save();
+            textBrush.Dispose();
+        }
+
+        private static IEnumerable<float> GetCharacterWidths(Graphics graphics, string text, Font font)
+        {
+            // The length of a space. Necessary because a space measured using StringFormat.GenericTypographic has no width.
+            // We can't use StringFormat.GenericDefault for the characters themselves, as it adds unwanted spacing.
+            var spaceLength = graphics.MeasureString(" ", font, Point.Empty, StringFormat.GenericDefault).Width;
+
+            return text.Select(c => c == ' ' ? spaceLength : graphics.MeasureString(c.ToString(), font, Point.Empty, StringFormat.GenericTypographic).Width);
+        }
+
+        private static void PopulateWordEffect(Graphics drawing, int numberOfFrmaePerWord, int currentIndexOfWord, string[] words, SizeF textSize, int count, int i)
+        {
+            float X, Y;
+            Font stringFont = new Font("Times New Roman", (float)70.0);
+
+            stringFont = new Font("Times New Roman", (float)70.0);
+            SizeF size = drawing.MeasureString(words[currentIndexOfWord], stringFont);
+            X = textSize.Width * 2 / 10;
+            Y = (textSize.Height - size.Height) / 2 + textSize.Height/5;
+            ThreeWordTextEffect.PopulateWordByWord(drawing, textSize, words[currentIndexOfWord], X, Y, i, size, stringFont);
+            drawing.Save();
+
+            //bitmap = (Bitmap)img;
+            //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FrameHalf" + i + ".bmp");
+
+            if (currentIndexOfWord - 1 >= 0)
+            {
+                stringFont = new Font("Times New Roman", (float)50.0);
+                size = drawing.MeasureString(words[currentIndexOfWord-1], stringFont);
+
+                if(count <  numberOfFrmaePerWord/2)
+                    Y = (Y - size.Height/2);
+                else
+                    Y = (Y - size.Height);
+
+                ThreeWordTextEffect.PopulateWordByWord(drawing, textSize, words[currentIndexOfWord - 1], X, Y, i, size, stringFont);
+                drawing.Save();
+            }
+
+            if (currentIndexOfWord - 2 >= 0)
+            {
+                stringFont = new Font("Times New Roman", (float)30.0);
+                size = drawing.MeasureString(words[currentIndexOfWord - 2], stringFont);
+
+                if (count < numberOfFrmaePerWord / 2)
+                    Y = (Y - size.Height / 2);
+                else
+                    Y = (Y - size.Height);
+
+                ThreeWordTextEffect.PopulateWordByWord(drawing, textSize, words[currentIndexOfWord - 2], X, Y, i, size, stringFont);
+                drawing.Save();
+            }
+
+            if (currentIndexOfWord - 3 >= 0)
+            {
+                stringFont = new Font("Times New Roman", (float)20.0);
+                size = drawing.MeasureString(words[currentIndexOfWord - 3], stringFont);
+
+                if (count < numberOfFrmaePerWord / 2)
+                    Y = (Y - size.Height / 2);
+                else
+                    Y = (Y - size.Height);
+
+                ThreeWordTextEffect.PopulateWordByWord(drawing, textSize, words[currentIndexOfWord - 3], X, Y, i, size, stringFont);
+                drawing.Save();
+            }
+
+            currentIndexOfWord++;
         }
     }
 }

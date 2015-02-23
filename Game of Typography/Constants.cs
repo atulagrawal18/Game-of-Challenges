@@ -8,7 +8,12 @@ namespace Game_of_Typography
     public enum TextEffect
     {
         CurvedTextEffect,
-        BouncingTextEffect
+        BouncingTextEffect,
+        AlternateLetterUpAndDownEffect,
+        AngledTextEffect,
+        MoveRightWithFirstFrameFreezedTextEffect,
+        MoveRightWithZoomEffect,
+        ThreeWordTextEffect
     }
     
 }

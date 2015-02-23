@@ -11,9 +11,9 @@ using System.Globalization;
 
 namespace TypographyEffects
 {
-    public static class BounceTextEffect
+    public static class AlternateLetterUpAndDownTextEffect
     {
-        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, int indexToBeJumped, int heightToBeJumped, bool flag)
+        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level)
         {
             Graphics g = graphics;
             string measureString = text;
@@ -71,12 +71,26 @@ namespace TypographyEffects
                     Region region = stringRegions[indx] as Region;
                     RectangleF rect = region.GetBounds(g);
 
-                    if (flag)
+                    if (level % 2 == 0)
                     {
-                        if (indexToBeJumped < numChars && indexToBeJumped == indx)
+                        if (indx % 2 == 0)
                         {
-                            //rect.Offset(0f, (float)-20.0f);
-                            rect.Offset(0f, -heightToBeJumped);
+                            rect.Offset(0f, (float)5.0f);
+                        }
+                        else
+                        {
+                            rect.Offset(0f, -(float)5.0f);
+                        }
+                    }
+                    else
+                    {
+                        if (indx % 2 == 0)
+                        {
+                            rect.Offset(0f, -(float)5.0f);
+                        }
+                        else
+                        {
+                            rect.Offset(0f, (float)5.0f);
                         }
                     }
 
