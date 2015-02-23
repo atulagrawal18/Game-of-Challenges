@@ -183,7 +183,7 @@ namespace Game_of_Typography
                 avi.CreateVideo(fp, 30, bounceTextConfig, te);
             }
 
-            
+            avi.CreateVideo(fp, 30, bounceTextConfig, te);
             txtVideoStatus.Text = "Video Created..........";
         }
 
@@ -204,13 +204,15 @@ namespace Game_of_Typography
             if (textEffect == TextEffect.CurvedTextEffect)
             {
                 window.Content = new CurvedTextConfig();
+                window.ShowDialog();
             }
             else if (textEffect == TextEffect.BouncingTextEffect)
             {
                 window.Content = new BounceTextConfig();
+                window.ShowDialog();
             }
 
-            window.ShowDialog();
+          
 
             if (textEffect == TextEffect.CurvedTextEffect)
             {
