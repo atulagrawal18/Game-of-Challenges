@@ -177,10 +177,14 @@ namespace Game_of_Typography
             if (te == TextEffect.CurvedTextEffect)
             {
                 avi.CreateVideo(fp, 30, curvedTextConfig, te);
+                txtVideoStatus.Text = "Video Created..........";
+                return;
             }
             else if (te == TextEffect.BouncingTextEffect)
             {
                 avi.CreateVideo(fp, 30, bounceTextConfig, te);
+                txtVideoStatus.Text = "Video Created..........";
+                return;
             }
 
             avi.CreateVideo(fp, 30, bounceTextConfig, te);
