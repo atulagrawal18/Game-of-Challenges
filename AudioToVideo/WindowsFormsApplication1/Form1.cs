@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using AviFile;
 using System.IO;
 using System.Globalization;
+using System.Drawing.Drawing2D;
 
 namespace WindowsFormsApplication1
 {
@@ -61,7 +62,6 @@ namespace WindowsFormsApplication1
 
         private void btnCreateVideo_Click(object sender, EventArgs e)
         {
-            float X=20, Y=100;
             if (File.Exists(txtVideo.Text))
                 File.Delete(txtVideo.Text);
             //double fps = 25;
@@ -82,6 +82,8 @@ namespace WindowsFormsApplication1
             textSize.Height = 400;
             textSize.Width = 800;
 
+            float X = textSize.Width/10, Y = textSize.Height/2;
+
             img.Dispose();
             drawing.Dispose();
 
@@ -95,11 +97,10 @@ namespace WindowsFormsApplication1
             AviManager aviManager = new AviManager(txtVideo.Text, false);
             VideoStream aviStream = aviManager.AddVideoStream(true, Properties.Settings.Default.fps, img);
 
-            img.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FirstFrame.bmp");
+            //img.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FirstFrame.bmp");
 
             Bitmap bitmap = (Bitmap)img;
             Bitmap emptyFrame = (Bitmap)img;
-
             for (int n = 1; n <= subtitles.Count(); n++)
             {
                 Subtitle s = subtitles.Where(i => i.Serial == n).ToList().Single();
@@ -130,10 +131,18 @@ namespace WindowsFormsApplication1
                 File.AppendAllText(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FramesCount.txt", n.ToString() + ": " + frameCount.ToString()+"\n");
                 
                 int d = frameCount / s.Lyrics.Single().Length;
+                if (d == 1)
+                    d = 2;
 
                 int outerLoopCounter = 0;
                 int innerLoopCounter = 0;
                 bool IsJumpChar = true;
+
+                string[] words = s.Lyrics.Single().ToString().Split(' ');
+
+                int numberOfFrmaePerWord = frameCount/words.Length;
+                int currentIndexOfWord = 0;
+
                 for (int i = 0; i < frameCount; i++)//, outerLoopCounter++, innerLoopCounter++)
                 {
                     //ResetImage(img, drawing, bitmap, textSize);
@@ -146,43 +155,17 @@ namespace WindowsFormsApplication1
                     drawing = Graphics.FromImage(img);
                     drawing.Clear(Color.Red);
 
-                    int strLength = s.Lyrics.Single().Length;
-                    int startIndex = 0;
-                    float firstCoordinate = 0.0f;
+                    //SizeF size = drawing.MeasureString(s.Lyrics.Single(), stringFont);
 
-                    outerLoopCounter = 0;
-                    if (i >= 32 * d)
-                    {
-                        if (s.Lyrics.Single().Length <= 32)
-                            IsJumpChar = false;
-                        else
-                            innerLoopCounter = -1;
-                    }
-                    else
-                    {
-                        innerLoopCounter = 0;
-                    }
+                    //RectangleF rec = new RectangleF(new PointF((textSize.Width - size.Width) / 2, (textSize.Height - size.Height) / 2), size);
+                    //RectangleWithText r = new RectangleWithText(rec, s.Lyrics.Single());
+                    //r.Draw(drawing);
 
-                    while (strLength > 0)
-                    {
-                        firstCoordinate = MeasureCharacterRangesRegions(drawing, s.Lyrics.Single().Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, count/2, count%2*10+10, outerLoopCounter == innerLoopCounter && IsJumpChar);
-                        strLength -= 32;
-                        startIndex += 32;
-                        drawing.Save();
-                        bitmap = (Bitmap)img;
-                        //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FrameHalf" + i + ".bmp");
-                        if (strLength > 0)
-                        innerLoopCounter++;
-                    }
-                    
-                    //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\FrameFull" + n + ".bmp");
-                    bitmap = new Bitmap(img);
-                    
-                    if ((((i / 10) % 10) % 2) == 0)
-                        flag = false;
-                    else
-                        flag = true;
-                    aviStream.AddFrame(bitmap, flag);
+                    DrawFlippedText(drawing, stringFont, textBrush, X, Y, s.Lyrics.Single(), bool flip_x, bool flip_y)
+
+                    bitmap = (Bitmap)img;
+
+                    aviStream.AddFrame(bitmap);
                     drawing.Dispose();
                 }
                 //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\Frame" + n + ".bmp");
@@ -326,27 +309,197 @@ namespace WindowsFormsApplication1
             textBrush.Dispose();
         }
 
-        public void SlowUPAndDown(Graphics drawing, SizeF textSize, string text, float X, float Y, int letter = 0)
+        public void MoveRightWithFirstFrameFreezed(Graphics drawing, SizeF textSize, string text, float X, float Y,  int i)
         {
             Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize);
             Brush textBrush = new SolidBrush(Color.White);
+
             drawing.DrawString(text, stringFont, textBrush, X, Y);
-
-            //if (!string.IsNullOrEmpty(text) && text.Length >= letter + 1)
-            //{
-            //    drawing.DrawString(text.Substring(letter, 1), stringFont, textBrush, X + letter * Properties.Settings.Default.FontSize, Y - 20);
-            //    SolidBrush blackBrush = new SolidBrush(Color.Red);
-            //    drawing.FillRectangle(blackBrush, X + letter * Properties.Settings.Default.FontSize, Y, Properties.Settings.Default.FontSize, Properties.Settings.Default.FontSize);
-            //}
-
-            //for (int i = 0; i < text.Length; i++)
-            //{
-            //    if(i != letter)
-            //    drawing.DrawString(text[i].ToString(), stringFont, textBrush, new Point((int)(X + i * Properties.Settings.Default.FontSize), (int)Y), StringFormat.GenericTypographic);
-            //}
+            drawing.DrawString(text, stringFont, textBrush, new Point((int)(X + i * 10), (int)Y), StringFormat.GenericTypographic);
 
             drawing.Save();
             textBrush.Dispose();
+        }
+
+        public void MoveRightWithZoom(Graphics drawing, SizeF textSize, string text, float X, float Y, int i)
+        {
+            int j = i/4/2;
+            float k = (float)j;
+            if(i%4 == 1)
+                k+= (float)1.0;
+            else if(i%4 == 2)
+                k+= (float)0.5;
+            else if(i%4 == 3)
+                k+= (float)1.5;
+
+            Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize + k);
+            Brush textBrush = new SolidBrush(Color.White);
+
+            var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
+            var textLength = characterWidths.Sum();
+
+            X = (textSize.Width - textLength) / 2;
+            Y = textSize.Height / 2;
+
+            //drawing.DrawString(text, stringFont, textBrush, X, Y);
+            drawing.DrawString(text, stringFont, textBrush, new Point((int)(X), (int)Y), StringFormat.GenericTypographic);
+
+            drawing.Save();
+            textBrush.Dispose();
+        }
+
+        public void DrawAtAnAngleTextOfCenterAtCenterOfScreen(Graphics drawing, SizeF textSize, string text, int i)
+        {
+            int j = i / 4 / 2;
+            float k = (float)j;
+            if (i % 4 == 1)
+                k += (float)1.0;
+            else if (i % 4 == 2)
+                k += (float)0.5;
+            else if (i % 4 == 3)
+                k += (float)1.5;
+
+            Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize + k );
+            //Font stringFont = new Font("Arial", k+(float)0.25);
+            Brush textBrush = new SolidBrush(Color.White);
+
+            //var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
+            //var textLength = characterWidths.Sum();
+
+            SizeF size = drawing.MeasureString(text, stringFont);
+            //drawing.TranslateTransform(textSize.Width / 2 + size.Width / 2, textSize.Height / 2 + size.Height / 2);
+            //drawing.TranslateTransform(400 + size.Width / 2, 200 + size.Height / 2);
+            //drawing.TranslateTransform(size.Width / 2, size.Height / 2);
+            drawing.TranslateTransform(textSize.Width / 2, textSize.Height / 2);
+            drawing.RotateTransform(i*10);
+            PointF drawPoint = new PointF(-size.Width / 2, -size.Height / 2);
+            drawing.DrawString(text, stringFont, textBrush, drawPoint);//, StringFormat.GenericTypographic);
+            drawing.Save();
+            textBrush.Dispose();
+        }
+
+        public void DrawTextAtCenter(Graphics drawing, SizeF textSize, string text, float X, float Y, int i)
+        {
+            float j = (float)i / (float)8.0;
+            float k = (float)j;
+            if (i % 4 == 1)
+                k += (float)0.1;
+            else if (i % 4 == 2)
+                k += (float)0.2;
+            else if (i % 4 == 3)
+                k += (float)0.3;
+
+            //Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize + k);
+            Font stringFont = new Font("Arial", (Math.Abs((float)40.0 - (float)(i + 1)) == 0) ? 1 : Math.Abs((float)40.0 - (float)(i + 1)));
+            Brush textBrush = new SolidBrush(Color.White);
+
+            var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
+            var textLength = characterWidths.Sum();
+
+            X = (textSize.Width - textLength) / 2;
+            Y = textSize.Height / 2;
+
+            //drawing.DrawString(text, stringFont, textBrush, X, Y);
+            drawing.DrawString(text, stringFont, textBrush, new Point((int)(X), (int)Y), StringFormat.GenericTypographic);
+
+            drawing.Save();
+            textBrush.Dispose();
+        }
+
+        public void PopulateWordByWord(Graphics drawing, SizeF textSize, string text, float X, float Y, int i, SizeF size, Font stringFont)
+        {
+            //Font stringFont = new Font("Arial", (float)100.0);
+            Brush textBrush = new SolidBrush(Color.White);
+
+            //var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
+            //var textLength = characterWidths.Sum();
+
+            //SizeF size = drawing.MeasureString(text, stringFont);
+
+            //X = (textSize.Width - size.Width) / 2;
+            //Y = (textSize.Height - size.Height) / 2;
+
+            //drawing.DrawString(text, stringFont, textBrush, X, Y);
+            drawing.DrawString(text, stringFont, textBrush, new Point((int)(X), (int)Y), StringFormat.GenericTypographic);
+
+            drawing.Save();
+            textBrush.Dispose();
+        }
+
+        private void GraphicPathCurve(Graphics g)
+        {
+            string text = "Some text to wrap";
+
+            //[[ Calculate coefficients A thru H from the control points ]]
+
+            GraphicsPath textPath = new GraphicsPath();
+
+            // the baseline should start at 0,0, so the next line is not quite correct
+            //path.AddString(text, someFont, someStyle, someFontSize, new Point(0,0));
+
+            RectangleF textBounds = textPath.GetBounds();
+ 
+            for (int i =0; i < textPath.PathPoints.Length; i++)
+            {
+                PointF pt = textPath.PathPoints[i];
+                float textX = pt.X;
+                float textY = pt.Y;
+    
+                // normalize the x coordinate into the parameterized value
+                // with a domain between 0 and 1.
+                float t =  textX / textBounds.Width;  
+       
+                // calculate spline point for parameter t
+                //float Sx = A * Math.Pow(t, 3) + B * Math.Pow(t, 2) + C * t + D;
+                //float Sy = E * Math.Pow(t, 3) + F * Math.Pow(t, 2) + G * t + H;
+
+                float Sx = (float) Math.Pow(t, 3) + (float) Math.Pow(t, 2) + t;
+                float Sy = (float) Math.Pow(t, 3) + (float) Math.Pow(t, 2) + t;
+        
+                // calculate the tangent vector for the point        
+                //float Tx = 3At2 + 2Bt + C;
+                //float Ty = 3Et2 + 2Ft + G;
+
+                float Tx = 3 * (float) Math.Pow(t, 2) + 2 * t;
+                float Ty = 3 * (float) Math.Pow(t, 3) + 2 * t;
+                // rotate 90 or 270 degrees to make it a perpendicular
+                float Px =   Ty;
+                float Py = - Tx;
+    
+                // normalize the perpendicular into a unit vector
+                float magnitude = (float) Math.Sqrt(Px * Px + Py * Py);
+                Px = Px / magnitude;
+                Py = Py / magnitude;
+
+                // assume that input text point y coord is the "height" or 
+                // distance from the spline.  Multiply the perpendicular vector 
+                // with y. it becomes the new magnitude of the vector.
+                Px *= textY;
+                Py *= textY;
+    
+                // translate the spline point using the resultant vector
+                float finalX = Px + Sx;
+                float finalY = Py + Sy;
+    
+                // I wish it were this easy, actually need 
+                // to create a new path.
+                textPath.PathPoints[i] = new PointF(finalX, finalY);
+            }
+
+            // draw the transformed text path		
+            g.DrawPath(Pens.Black, textPath);
+
+            // draw the Bézier for reference
+            //g.DrawBezier(Pens.Black, P0,  P1,  P2,  P3);
+        }
+
+        private static IEnumerable<float> GetCharacterWidths(Graphics graphics, string text, Font font)
+        {
+            // The length of a space. Necessary because a space measured using StringFormat.GenericTypographic has no width.
+            // We can't use StringFormat.GenericDefault for the characters themselves, as it adds unwanted spacing.
+            var spaceLength = graphics.MeasureString(" ", font, Point.Empty, StringFormat.GenericDefault).Width;
+
+            return text.Select(c => c == ' ' ? spaceLength : graphics.MeasureString(c.ToString(), font, Point.Empty, StringFormat.GenericTypographic).Width);
         }
 
         public float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, int indexToBeJumped, int heightToBeJumped, bool flag)
@@ -408,36 +561,36 @@ namespace WindowsFormsApplication1
                     Region region = stringRegions[indx] as Region;
                     RectangleF rect = region.GetBounds(g);
 
-                    //if (level % 2 == 0)
-                    //{
-                    //    if (indx % 2 == 0)
-                    //    {
-                    //        rect.Offset(0f, (float)5.0f);
-                    //    }
-                    //    else
-                    //    {
-                    //        rect.Offset(0f, -(float)5.0f);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    if (indx % 2 == 0)
-                    //    {
-                    //        rect.Offset(0f, -(float)5.0f);
-                    //    }
-                    //    else
-                    //    {
-                    //        rect.Offset(0f, (float)5.0f);
-                    //    }
-                    //}
-                    if (flag)
+                    if (level % 2 == 0)
                     {
-                        if (indexToBeJumped < numChars && indexToBeJumped == indx)
+                        if (indx % 2 == 0)
                         {
-                            //rect.Offset(0f, (float)-20.0f);
-                            rect.Offset(0f, -heightToBeJumped);
+                            rect.Offset(0f, (float)5.0f);
+                        }
+                        else
+                        {
+                            rect.Offset(0f, -(float)5.0f);
                         }
                     }
+                    else
+                    {
+                        if (indx % 2 == 0)
+                        {
+                            rect.Offset(0f, -(float)5.0f);
+                        }
+                        else
+                        {
+                            rect.Offset(0f, (float)5.0f);
+                        }
+                    }
+                    //if (flag)
+                    //{
+                    //    if (indexToBeJumped < numChars && indexToBeJumped == indx)
+                    //    {
+                    //        //rect.Offset(0f, (float)-20.0f);
+                    //        rect.Offset(0f, -heightToBeJumped);
+                    //    }
+                    //}
 
                     g.DrawString(measureString.Substring(indx, 1),
                           stringFont, Brushes.White, rect, stringFormat);
@@ -457,6 +610,27 @@ namespace WindowsFormsApplication1
                 return a;
             else
                 return b;
+        }
+
+        public void DrawFlippedText(Graphics gr, Font font, Brush brush, int x, int y, string txt, bool flip_x, bool flip_y)
+        {
+            //Save the current graphics state.
+            GraphicsState state = gr.Save();
+
+            //Set up the transformation.
+            gr.ResetTransform();
+            gr.ScaleTransform(1.0f, -1.0f);
+
+            //Figure out where to draw.
+            SizeF txt_size = gr.MeasureString(txt, font);
+            if (flip_x) x = -x - (int) txt_size.Width;
+            if (flip_y) y = -y - (int) txt_size.Height;
+
+            //Draw.
+            gr.DrawString(txt, font, brush, x, y);
+
+            //Restore the original graphics state.
+            gr.Restore(state);
         }
 
         //private void ResetImage(Bitmap img, Graphics drawing, Bitmap bitmap, SizeF textSize)
