@@ -13,7 +13,8 @@ namespace Game_of_Typography
         AngledTextEffect,
         MoveRightWithFirstFrameFreezedTextEffect,
         MoveRightWithZoomEffect,
-        ThreeWordTextEffect
+        ThreeWordTextEffect,
+        LetterEffect
     }
     
 }

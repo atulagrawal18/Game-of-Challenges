@@ -72,6 +72,7 @@
       <DependentUpon>CurvedTextConfig.xaml</DependentUpon>
     </Compile>
     <Compile Include="CurvedTextEffectConfig.cs" />
+    <Compile Include="LetterEffect.cs" />
     <Compile Include="MoveRightTextEffect.cs" />
     <Compile Include="TextEffectConfig.cs" />
     <Compile Include="CurvedTextEffects.cs" />

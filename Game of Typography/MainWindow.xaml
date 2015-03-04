@@ -79,6 +79,7 @@
                         <ComboBoxItem>Three Word Text Effect</ComboBoxItem>
                         <ComboBoxItem>Move Right With Zoom Text Effect</ComboBoxItem>
                         <ComboBoxItem>Move Right With First Frame Freezed Text Effect</ComboBoxItem>
+                        <ComboBoxItem>Produce line letter By letter effect</ComboBoxItem>
                     </ComboBox>
                     <Button Name="btnConfig" Width="120" Grid.Row="1"  Click="btnConfig_Click" Height="24" VerticalAlignment="Top">Configure</Button>
                     <Button Name="btnCreateVideo" Click="btnCreateVideo_Click" Width="100" Content="Create Video" Grid.Row="2" HorizontalAlignment="Left" Margin="157,0,0,0">
