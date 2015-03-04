@@ -80,7 +80,7 @@ namespace Game_of_Typography
 
             img = new Bitmap((int)textSize.Width, (int)textSize.Height);
             drawing = Graphics.FromImage(img);
-            drawing.Clear(Color.White);
+            drawing.Clear(Color.Blue);
 
             Brush textBrush = new SolidBrush(Color.White);
 
@@ -116,7 +116,7 @@ namespace Game_of_Typography
 
                 img = new Bitmap((int)textSize.Width, (int)textSize.Height);
                 drawing = Graphics.FromImage(img);
-                drawing.Clear(Color.White);
+                drawing.Clear(Color.Blue);
                 drawing.Save();
                 bitmap.Dispose();
 
@@ -142,7 +142,7 @@ namespace Game_of_Typography
 
                     img = new Bitmap((int)textSize.Width, (int)textSize.Height);
                     drawing = Graphics.FromImage(img);
-                    drawing.Clear(Color.White);
+                    drawing.Clear(Color.Blue);
                     bitmap = (Bitmap)img;
 
                     if (textEffect == TextEffect.CurvedTextEffect)
@@ -249,7 +249,7 @@ namespace Game_of_Typography
 
             img = new Bitmap((int)textSize.Width, (int)textSize.Height);
             drawing = Graphics.FromImage(img);
-            drawing.Clear(Color.White);
+            drawing.Clear(Color.Blue);
 
             bitmap = SubtitlesUtility.GetEmptyFrame(textSize);
 

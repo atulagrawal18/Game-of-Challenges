@@ -66,7 +66,7 @@ namespace Subtitles
 
             img = new Bitmap((int)textSize.Width, (int)textSize.Height);
             drawing = Graphics.FromImage(img);
-            drawing.Clear(Color.White);
+            drawing.Clear(Color.Blue);
 
             Brush textBrush = new SolidBrush(Color.White);
 
