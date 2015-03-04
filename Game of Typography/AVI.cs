@@ -440,43 +440,5 @@ namespace Game_of_Typography
 
             currentIndexOfWord++;
         }
-
-        //private static void PopulateLetter(Graphics drawing, SizeF textSize, int i, Font stringFont, string text)
-        //{
-        //    SizeF txt_size = drawing.MeasureString(text, stringFont);
-        //    var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
-        //    var textLength = characterWidths.Sum();
-        //    while (i < text.Length + 2)
-        //    {
-        //        float w;
-
-        //        if (i == 0)
-        //            w = 0;
-        //        else
-        //            w = i < text.Length ? characterWidths[i - 1] : characterWidths[text.Length - 1];
-
-        //        LetterEffect.PopulateLetterByLetter(drawing, textSize, text, X + w, Y, i, i, stringFont);
-        //        X += w;
-        //        bitmap = (Bitmap)img;
-        //        bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\Frame" + i + ".bmp");
-        //        aviStream.AddFrame(bitmap);
-
-        //        //Rectangle r = new Rectangle((int)(X + w + 20), (int)Y - 10, (int)(textSize.Width - X - w - 20), 50);
-        //        Rectangle r = new Rectangle((int)(X + w + 20), (int)Y - 10, (int)(textSize.Width), 50);
-        //        drawing.FillRectangle(new SolidBrush(Color.White), r);
-
-        //        //bitmap = (Bitmap)img;
-        //        //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\ClearedFrame" + i + ".bmp");
-
-        //        i++;
-        //    }
-
-        //    while (i < frameCount)
-        //    {
-        //        bitmap.Save(@"D:\Game of Challenges\AudioToVideo\AudioToVideo\testdata\FrameFull" + i + ".bmp");
-        //        aviStream.AddFrame(bitmap);
-        //        i++;
-        //    }
-        //}
     }
 }
