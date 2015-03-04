@@ -11,9 +11,9 @@ namespace Game_of_Typography
         BouncingTextEffect,
         AlternateLetterUpAndDownEffect,
         AngledTextEffect,
-        MoveRightWithFirstFrameFreezedTextEffect,
-        MoveRightWithZoomEffect,
         ThreeWordTextEffect,
+        MoveRightWithZoomEffect,
+        MoveRightWithFirstFrameFreezedTextEffect,
         LetterEffect
     }
     
