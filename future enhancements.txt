@@ -6,3 +6,4 @@ Apart from adding new features following are the list of enhancements on current
 3. Configure different font family for each string (from user)
 4. Take input of X and Y coordinates from user where the string appears in the frame.
 5. Different types of configuration for different effects (e.g. radius for curve effects, speed for bounce effects)
+6. Use gradient colors in the text instead of fix color.
