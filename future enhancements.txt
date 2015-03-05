@@ -1,0 +1,8 @@
+Apart from adding new features following are the list of enhancements on current effects.
+
+1. Showing a sample frame to user after the input of parameters for each effect.
+2. Input any type of audio file and output any type of video file. (currently wav for i/p and avi for o/p)
+2. Automatically determine best possible font size for each string separately.
+3. Configure different font family for each string (from user)
+4. Take input of X and Y coordinates from user where the string appears in the frame.
+5. Different types of configuration for different effects (e.g. radius for curve effects, speed for bounce effects)
