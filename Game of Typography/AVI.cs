@@ -160,7 +160,7 @@ namespace Game_of_Typography
                     }
                     else if ((n % 8 == 3 && textEffect == TextEffect.Random) || textEffect == TextEffect.AlternateLetterUpAndDownEffect)
                     {
-                        AlternateLetterUpAndDownEffect(drawing, i, s.Lyrics);
+                        AlternateLetterUpAndDownEffect(drawing, i, s.Lyrics, textSize, stringFont);
                     }
                     else if ((n % 8 == 4 && textEffect == TextEffect.Random) || textEffect == TextEffect.AngledTextEffect)
                     {
@@ -322,15 +322,17 @@ namespace Game_of_Typography
                 return b;
         }
 
-        public void AlternateLetterUpAndDownEffect(Graphics drawing, int i, string s)
+        public void AlternateLetterUpAndDownEffect(Graphics drawing, int i, string s, SizeF textSize, Font stringFont)
         {
             int strLength = s.Length;
             int startIndex = 0;
-            float firstCoordinate = 0.0f;
+            SizeF size = drawing.MeasureString(s, stringFont);
+            //float firstCoordinate = 0.0f;
+            float firstCoordinate = (textSize.Width - size.Width) / 2;
 
             while (strLength > 0)
             {
-                firstCoordinate = AlternateLetterUpAndDownTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i);
+                firstCoordinate = AlternateLetterUpAndDownTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, textSize.Height);
                 strLength -= 32;
                 startIndex += 32;
                 drawing.Save();

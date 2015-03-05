@@ -13,7 +13,7 @@ namespace TypographyEffects
 {
     public static class AlternateLetterUpAndDownTextEffect
     {
-        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level)
+        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, float Y)
         {
             Graphics g = graphics;
             string measureString = text;
@@ -53,7 +53,7 @@ namespace TypographyEffects
                 //
                 // Assume the string is in a stratight line, just to work out the 
                 // regions. We will adjust the containing rectangles later.
-                RectangleF layoutRect = new RectangleF(X, 100.0f, size.Width, size.Height);
+                RectangleF layoutRect = new RectangleF(X, Y/2, size.Width, size.Height);
 
                 //
                 // Caluclate the regions for each character in the string.

@@ -33,6 +33,9 @@ namespace TypographyEffects
                 k += (float)1.5;
 
             Font font = new Font("Arial", stringFont.Size + k);
+
+            if(stringFont.Size >= 30.0f)
+            font = new Font("Arial", stringFont.Size + k - 15.0f);
             Brush textBrush = new SolidBrush(Color.White);
 
             var characterWidths = GetCharacterWidths(drawing, text, font).ToArray();
