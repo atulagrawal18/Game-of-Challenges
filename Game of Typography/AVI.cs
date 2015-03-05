@@ -199,7 +199,7 @@ namespace Game_of_Typography
                             while (currentIndexOfWord == words.Length-1 && i < frameCount)
                             {
                                 i++;
-                                bitmap.Save(@"D:\Game of Challenges\AudioToVideo\AudioToVideo\testdata\FrameFull" + i + ".bmp");
+                                //bitmap.Save(@"D:\Game of Challenges\AudioToVideo\AudioToVideo\testdata\FrameFull" + i + ".bmp");
                                 aviStream.AddFrame(bitmap);
                             }
                             i--;

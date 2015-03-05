@@ -255,7 +255,7 @@ namespace Game_of_Typography
              {
                  window.Content = new CurvedTextConfig();
              }
-             else if (textEffect == TextEffect.BouncingTextEffect)
+             else// if (textEffect == TextEffect.BouncingTextEffect)
              {
                  window.Content = new BounceTextConfig();
              }
