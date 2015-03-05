@@ -57,6 +57,11 @@ namespace Game_of_Typography
                 bounceTextConfig = (BounceTextEffectConfig)config;
                 stringFont = new Font("Arial", bounceTextConfig.FontSize);
             }
+            else
+            {
+                bounceTextConfig = (BounceTextEffectConfig)config;
+                stringFont = new Font("Arial", bounceTextConfig.FontSize);
+            }
 
             DateTime lastVerifiedTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 0);
 
@@ -125,11 +130,11 @@ namespace Game_of_Typography
                 int frameCount = (int)((s.EndTime - s.StartTime).TotalMilliseconds * frameRate / 1000);
                 // File.AppendAllText(@"D:\Game of Challenges\AudioToVideo\AudioToVideo\testdata\\FramesCount.txt", n.ToString() + ": " + frameCount.ToString() + "\n");
 
-                int d = frameCount / s.Lyrics.Single().Length;
+                int d = frameCount / s.Lyrics.Length;
                 if (d == 1)
                     d = 2;
 
-                string[] words = s.Lyrics.Single().ToString().Split(' ');
+                string[] words = s.Lyrics.Split(' ');
                 int numberOfFrmaePerWord = frameCount / words.Length;
                 int currentIndexOfWord = 0;
                 float X = textSize.Width / 10, Y = textSize.Height / 2;
@@ -145,39 +150,39 @@ namespace Game_of_Typography
                     drawing.Clear(Color.Blue);
                     bitmap = (Bitmap)img;
 
-                    if (textEffect == TextEffect.CurvedTextEffect)
+                    if ((n%8 == 1 && textEffect == TextEffect.Random) || textEffect == TextEffect.CurvedTextEffect)
                     {
-                        CurveEffect(drawing, s.Lyrics.Single(), stringFont, textBrush, textSize, i);
+                        CurveEffect(drawing, s.Lyrics, stringFont, textBrush, textSize, i);
                     }
-                    else if (textEffect == TextEffect.BouncingTextEffect)
+                    else if ((n % 8 == 2 && textEffect == TextEffect.Random) || textEffect == TextEffect.BouncingTextEffect)
                     {
-                        BounceEffect(drawing, i, s.Lyrics.Single(), d);
+                        BounceEffect(drawing, i, s.Lyrics, d);
                     }
-                    else if (textEffect == TextEffect.AlternateLetterUpAndDownEffect)
+                    else if ((n % 8 == 3 && textEffect == TextEffect.Random) || textEffect == TextEffect.AlternateLetterUpAndDownEffect)
                     {
-                        AlternateLetterUpAndDownEffect(drawing, i, s.Lyrics.Single());
+                        AlternateLetterUpAndDownEffect(drawing, i, s.Lyrics);
                     }
-                    else if (textEffect == TextEffect.AngledTextEffect)
+                    else if ((n % 8 == 4 && textEffect == TextEffect.Random) || textEffect == TextEffect.AngledTextEffect)
                     {
-                        var characterWidths = GetCharacterWidths(drawing, s.Lyrics.Single(), stringFont).ToArray();
+                        var characterWidths = GetCharacterWidths(drawing, s.Lyrics, stringFont).ToArray();
                         var textLength = characterWidths.Sum();
 
                         X = (textSize.Width - textLength) / 2;
                         Y = textSize.Height / 2;
                         if (i <= frameCount * 6 / 10)
-                            AngledTextEffect.DrawAtAnAngleTextOfCenterAtCenterOfScreen(drawing, textSize, s.Lyrics.Single(), i, stringFont);
+                            AngledTextEffect.DrawAtAnAngleTextOfCenterAtCenterOfScreen(drawing, textSize, s.Lyrics, i, stringFont);
                         else
-                            DrawTextAtCenter(drawing, textSize, s.Lyrics.Single(), i);
+                            DrawTextAtCenter(drawing, textSize, s.Lyrics, i);
                     }
-                    else if (textEffect == TextEffect.MoveRightWithFirstFrameFreezedTextEffect)
+                    else if ((n % 8 == 5 && textEffect == TextEffect.Random) || textEffect == TextEffect.MoveRightWithFirstFrameFreezedTextEffect)
                     {
-                        MoveRightTextEffect.MoveRightWithFirstFrameFreezed(drawing, textSize, s.Lyrics.Single(), X, Y, i, stringFont);
+                        MoveRightTextEffect.MoveRightWithFirstFrameFreezed(drawing, textSize, s.Lyrics, X, Y, i, stringFont);
                     }
-                    else if (textEffect == TextEffect.MoveRightWithZoomEffect)
+                    else if ((n % 8 == 6 && textEffect == TextEffect.Random) || textEffect == TextEffect.MoveRightWithZoomEffect)
                     {
-                        MoveRightTextEffect.MoveRightWithZoom(drawing, textSize, s.Lyrics.Single(), X, Y, i, stringFont);
+                        MoveRightTextEffect.MoveRightWithZoom(drawing, textSize, s.Lyrics, X, Y, i, stringFont);
                     }
-                    else if (textEffect == TextEffect.ThreeWordTextEffect)
+                    else if ((n % 8 == 7 && textEffect == TextEffect.Random) || textEffect == TextEffect.ThreeWordTextEffect)
                     {
                         int count = i % (32 * d);
                         int counter = numberOfFrmaePerWord;
@@ -201,9 +206,9 @@ namespace Game_of_Typography
                         }
                         currentIndexOfWord++;
                     }
-                    else if (textEffect == TextEffect.LetterEffect)
+                    else if ((n % 8 == 0 && textEffect == TextEffect.Random) || textEffect == TextEffect.LetterEffect)
                     {
-                        string text = s.Lyrics.Single();
+                        string text = s.Lyrics;
                         while (i < text.Length)
                         {
                             var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();

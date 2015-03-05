@@ -10,6 +10,13 @@ namespace Subtitles
         public int Serial { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public List<string> Lyrics { get; set; }
+        public List<string> LyricsList { get; set; }
+        public string Lyrics 
+        { 
+            get 
+            { 
+                return LyricsList.Aggregate((i, j) => i + " " + j);
+            }
+        }
     }
 }

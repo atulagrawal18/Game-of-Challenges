@@ -14,7 +14,8 @@ namespace Game_of_Typography
         ThreeWordTextEffect,
         MoveRightWithZoomEffect,
         MoveRightWithFirstFrameFreezedTextEffect,
-        LetterEffect
+        LetterEffect,
+        Random
     }
     
 }

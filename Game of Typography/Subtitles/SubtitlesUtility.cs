@@ -29,7 +29,7 @@ namespace Subtitles
                 if (lines[i] == (counter + 1).ToString())
                 {
                     Subtitle subtitle = new Subtitle();
-                    subtitle.Lyrics = new List<string>();
+                    subtitle.LyricsList = new List<string>();
                     subtitle.Serial = counter + 1;
                     DateTime startTime, endTime;
                     ParseTime(out startTime, out endTime, lines[++i]);
@@ -39,7 +39,7 @@ namespace Subtitles
                     i++;
                     while (i < lines.Count() && lines[i] != (counter + 1).ToString())
                     {
-                        subtitle.Lyrics.Add(lines[i].Trim());
+                        subtitle.LyricsList.Add(lines[i].Trim());
                         i++;
                     }
                     subtitles.Add(subtitle);

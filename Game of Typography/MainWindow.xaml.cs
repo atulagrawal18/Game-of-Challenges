@@ -210,7 +210,7 @@ namespace Game_of_Typography
                 window.Content = new CurvedTextConfig();
                 window.ShowDialog();
             }
-            else if (textEffect == TextEffect.BouncingTextEffect)
+            else// if (textEffect == TextEffect.BouncingTextEffect)
             {
                 window.Content = new BounceTextConfig();
                 window.ShowDialog();
@@ -223,7 +223,7 @@ namespace Game_of_Typography
                 CurvedTextConfig c = (CurvedTextConfig)window.Content;
                 curvedTextConfig.FontSize = c.TextFontSize;
             }
-            else if (textEffect == TextEffect.BouncingTextEffect)
+            else// if (textEffect == TextEffect.BouncingTextEffect)
             {
                 BounceTextConfig c = (BounceTextConfig)window.Content;
                 bounceTextConfig.FontSize = c.TextFontSize;
@@ -267,7 +267,7 @@ namespace Game_of_Typography
                  CurvedTextConfig c = (CurvedTextConfig)window.Content;
                  curvedTextConfig.FontSize = c.TextFontSize;
              }
-             else if (textEffect == TextEffect.BouncingTextEffect)
+             else// if (textEffect == TextEffect.BouncingTextEffect)
              {
                  BounceTextConfig c = (BounceTextConfig)window.Content;
                  bounceTextConfig.FontSize = c.TextFontSize;
