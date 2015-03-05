@@ -156,7 +156,7 @@ namespace Game_of_Typography
                     }
                     else if ((n % 8 == 2 && textEffect == TextEffect.Random) || textEffect == TextEffect.BouncingTextEffect)
                     {
-                        BounceEffect(drawing, i, s.Lyrics, d);
+                        BounceEffect(drawing, i, s.Lyrics, d, textSize, stringFont);
                     }
                     else if ((n % 8 == 3 && textEffect == TextEffect.Random) || textEffect == TextEffect.AlternateLetterUpAndDownEffect)
                     {
@@ -277,13 +277,15 @@ namespace Game_of_Typography
             CurvedTextEffects.DrawCurvedText(drawing, s, c, 250, f/*(float)45*/, stringFont, textBrush);
         }
 
-        public void BounceEffect(Graphics drawing, int i, string s, int d)
+        public void BounceEffect(Graphics drawing, int i, string s, int d, SizeF textSize, Font stringFont)
         {
             int count = i % (32 * d);
 
             int strLength = s.Length;
             int startIndex = 0;
-            float firstCoordinate = 0.0f;
+            SizeF size = drawing.MeasureString(s, stringFont);
+            //float firstCoordinate = 0.0f;
+            float firstCoordinate = (textSize.Width - size.Width) / 2;
 
             int outerLoopCounter = 0;
             int innerLoopCounter = 0;
@@ -303,7 +305,7 @@ namespace Game_of_Typography
 
             while (strLength > 0)
             {
-                firstCoordinate = BounceTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, count / 2, count % 2 * 10 + 10, outerLoopCounter == innerLoopCounter && IsJumpChar);
+                firstCoordinate = BounceTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, count / 2, count % 2 * 10 + 10, outerLoopCounter == innerLoopCounter && IsJumpChar, textSize.Height);
                 strLength -= 32;
                 startIndex += 32;
                 drawing.Save();

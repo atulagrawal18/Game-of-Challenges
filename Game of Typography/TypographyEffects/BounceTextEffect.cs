@@ -13,7 +13,7 @@ namespace TypographyEffects
 {
     public static class BounceTextEffect
     {
-        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, int indexToBeJumped, int heightToBeJumped, bool flag)
+        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, int indexToBeJumped, int heightToBeJumped, bool flag, float Y)
         {
             Graphics g = graphics;
             string measureString = text;
@@ -43,7 +43,7 @@ namespace TypographyEffects
 
             //
             // The font to use.. 'using' will dispose of it for us
-            using (Font stringFont = new Font("Times New Roman", 36.0F))
+            using (Font stringFont = new Font("Times New Roman", 32.0F))
             {
 
                 //
@@ -53,7 +53,8 @@ namespace TypographyEffects
                 //
                 // Assume the string is in a stratight line, just to work out the 
                 // regions. We will adjust the containing rectangles later.
-                RectangleF layoutRect = new RectangleF(X, 100.0f, size.Width, size.Height);
+                RectangleF layoutRect = new RectangleF(X, Y/2, size.Width, size.Height);
+                //RectangleF layoutRect = new RectangleF(X, 100.0f, size.Width, size.Height);
 
                 //
                 // Caluclate the regions for each character in the string.
