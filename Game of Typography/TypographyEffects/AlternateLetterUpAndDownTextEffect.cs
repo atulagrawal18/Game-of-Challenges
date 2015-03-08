@@ -13,7 +13,7 @@ namespace TypographyEffects
 {
     public static class AlternateLetterUpAndDownTextEffect
     {
-        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, float Y)
+        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, float Y, Font stringFont)
         {
             Graphics g = graphics;
             string measureString = text;
@@ -43,7 +43,7 @@ namespace TypographyEffects
 
             //
             // The font to use.. 'using' will dispose of it for us
-            using (Font stringFont = new Font("Times New Roman", 36.0F))
+            using (stringFont)
             {
 
                 //

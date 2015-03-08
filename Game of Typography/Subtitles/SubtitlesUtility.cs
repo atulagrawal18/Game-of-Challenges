@@ -42,6 +42,9 @@ namespace Subtitles
                         subtitle.LyricsList.Add(lines[i].Trim());
                         i++;
                     }
+                    subtitle.FontSize = 32;
+                    subtitle.FontFamily = "Arial";
+                    subtitle.TextEffect = "Random";
                     subtitles.Add(subtitle);
                 }
             }

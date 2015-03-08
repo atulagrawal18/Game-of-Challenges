@@ -9,9 +9,9 @@ namespace TypographyEffects
 {
     public static class MoveRightTextEffect
     {
-        public static void MoveRightWithFirstFrameFreezed(Graphics drawing, SizeF textSize, string text, float X, float Y, int i, Font font)
+        public static void MoveRightWithFirstFrameFreezed(Graphics drawing, SizeF textSize, string text, float X, float Y, int i, Font stringFont)
         {
-            //Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize);
+            Font font = new Font(stringFont.FontFamily, stringFont.Size);
             Brush textBrush = new SolidBrush(Color.White);
 
             drawing.DrawString(text, font, textBrush, X, Y);
@@ -32,10 +32,10 @@ namespace TypographyEffects
             else if (i % 4 == 3)
                 k += (float)1.5;
 
-            Font font = new Font("Arial", stringFont.Size + k);
+            Font font = new Font(stringFont.FontFamily, stringFont.Size + k);
 
             if(stringFont.Size >= 30.0f)
-            font = new Font("Arial", stringFont.Size + k - 15.0f);
+                font = new Font(stringFont.FontFamily, stringFont.Size + k - 15.0f);
             Brush textBrush = new SolidBrush(Color.White);
 
             var characterWidths = GetCharacterWidths(drawing, text, font).ToArray();

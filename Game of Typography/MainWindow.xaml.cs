@@ -15,6 +15,8 @@ using Xceed.Wpf.Toolkit;
 using System.ComponentModel;
 using System.Windows.Forms;
 using TypographyEffects;
+using Subtitles;
+using System.Drawing.Text;
 
 
 namespace Game_of_Typography
@@ -36,8 +38,19 @@ namespace Game_of_Typography
 
             txtVideoStatus.Visibility = Visibility.Collapsed;
 
+            TextEffects = Helper.GetNamesInEnum(typeof(TextEffect));
+            cmbTextEffectForAllLines.ItemsSource = TextEffects;
+            InstalledFontCollection installedFontCollection = new InstalledFontCollection();
+            cmbFontFamilyForAllLines.ItemsSource = installedFontCollection.Families.Select(f => f.Name).ToList();
+            List<Subtitle> lstSubtitle;
+            SubtitlesUtility.ParseSubtitle(out lstSubtitle, fp.SrtPath);
+            Subtitles = lstSubtitle;
+            RadGridViewConfiguration.ItemsSource = Subtitles;
 
         }
+
+        public List<Subtitle> Subtitles { get; set; }
+        public List<string> TextEffects { get; set; }
 
         #region IsPlaying(bool)
         private void IsPlaying(bool bValue)
@@ -170,110 +183,32 @@ namespace Game_of_Typography
         private void btnCreateVideo_Click(object sender, RoutedEventArgs e)
         {
             txtVideoStatus.Visibility = Visibility.Visible;
-            txtVideoStatus.Text = "Creating Video..........";
+            txtVideoStatus.Text = "Creating Video...";
 
-            TextEffect te = (TextEffect)cmbTextEffect.SelectedIndex;
+            avi.CreateVideo(fp, 30, Subtitles);
 
-            if (te == TextEffect.CurvedTextEffect)
-            {
-                avi.CreateVideo(fp, 30, curvedTextConfig, te);
-                txtVideoStatus.Text = "Video Created..........";
-                return;
-            }
-            else if (te == TextEffect.BouncingTextEffect)
-            {
-                avi.CreateVideo(fp, 30, bounceTextConfig, te);
-                txtVideoStatus.Text = "Video Created..........";
-                return;
-            }
-
-            avi.CreateVideo(fp, 30, bounceTextConfig, te);
-            txtVideoStatus.Text = "Video Created..........";
+            txtVideoStatus.Text = "Video Created!";
         }
 
-        private void cmbTextEffect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cmbTextEffectForAllLines_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           
-            Window window = new Window
-            {
-                Title = "Text effect",
-                Content = new CurvedTextConfig()
-            };
-            window.Width = 400;
-            window.Height = 400;
+            TextEffect textEffect = (TextEffect)Enum.Parse(typeof(TextEffect),cmbTextEffectForAllLines.SelectedValue.ToString());
 
-
-            TextEffect textEffect = (TextEffect)cmbTextEffect.SelectedIndex;
-
-            if (textEffect == TextEffect.CurvedTextEffect)
-            {
-                window.Content = new CurvedTextConfig();
-                window.ShowDialog();
-            }
-            else// if (textEffect == TextEffect.BouncingTextEffect)
-            {
-                window.Content = new BounceTextConfig();
-                window.ShowDialog();
-            }
-
-          
-
-            if (textEffect == TextEffect.CurvedTextEffect)
-            {
-                CurvedTextConfig c = (CurvedTextConfig)window.Content;
-                curvedTextConfig.FontSize = c.TextFontSize;
-            }
-            else// if (textEffect == TextEffect.BouncingTextEffect)
-            {
-                BounceTextConfig c = (BounceTextConfig)window.Content;
-                bounceTextConfig.FontSize = c.TextFontSize;
-            }
-
-           
-            
-
+            Subtitles.ForEach(s => { s.TextEffect = textEffect.ToString(); });
         }
-        TextEffectConfig config = new TextEffectConfig();
-        CurvedTextEffectConfig curvedTextConfig = new CurvedTextEffectConfig();
-        BounceTextEffectConfig bounceTextConfig = new BounceTextEffectConfig();
-         
 
-         private void btnConfig_Click(object sender, RoutedEventArgs e)
-         {
-             Window window = new Window
-             {
-                 Title = "Text effect",
-                 Content = new CurvedTextConfig()
-             };
-             window.Width = 400;
-             window.Height = 400;
+        private void txtFontSizeForAllLines_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            float fontSize = Convert.ToSingle(txtFontSizeForAllLines.Text);
+            Subtitles.ForEach(s => { s.FontSize = fontSize; });
+        }
 
+        private void cmbFontFamilyForAllLines_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string fontFamily = cmbFontFamilyForAllLines.SelectedValue.ToString();
 
-             TextEffect textEffect = (TextEffect)cmbTextEffect.SelectedIndex;
-
-             if (textEffect == TextEffect.CurvedTextEffect)
-             {
-                 window.Content = new CurvedTextConfig();
-             }
-             else// if (textEffect == TextEffect.BouncingTextEffect)
-             {
-                 window.Content = new BounceTextConfig();
-             }
-
-             window.ShowDialog();
-
-             if (textEffect == TextEffect.CurvedTextEffect)
-             {
-                 CurvedTextConfig c = (CurvedTextConfig)window.Content;
-                 curvedTextConfig.FontSize = c.TextFontSize;
-             }
-             else// if (textEffect == TextEffect.BouncingTextEffect)
-             {
-                 BounceTextConfig c = (BounceTextConfig)window.Content;
-                 bounceTextConfig.FontSize = c.TextFontSize;
-             }
-
-         }
+            Subtitles.ForEach(s => { s.FontFamily = fontFamily; });
+        }
             
     }
 }

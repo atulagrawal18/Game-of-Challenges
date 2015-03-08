@@ -9,9 +9,9 @@ namespace TypographyEffects
 {
     public static class LetterEffect
     {
-        public static void PopulateLetterByLetter(Graphics drawing, SizeF textSize, string text, float X, float Y, int i, int currentIndex, Font stringFont)
+        public static void PopulateLetterByLetter(Graphics drawing, SizeF textSize, string text, float X, float Y, int i, int currentIndex, Font font)
         {
-            //Font stringFont = new Font(FontFamily.Families[2], 20.0f);
+            Font stringFont = new Font(font.FontFamily, font.Size);
             var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
 
             SizeF txt_size = drawing.MeasureString(text, stringFont);

@@ -39,34 +39,13 @@ namespace Game_of_Typography
             }
         }
 
-        public void CreateVideo(FilePaths fps, double frameRate, TextEffectConfig config, TextEffect textEffect)
+        public void CreateVideo(FilePaths fps, double frameRate, List<Subtitle> subtitles)
         {
             if (File.Exists(fps.VideoPath))
                 File.Delete(fps.VideoPath);
 
-            CurvedTextEffectConfig curvedTextConfig;
-            BounceTextEffectConfig bounceTextConfig;
-            Font stringFont =  new Font("Arial", 16);;
-            if(textEffect == TextEffect.CurvedTextEffect)
-            {
-                curvedTextConfig = (CurvedTextEffectConfig)config;
-                stringFont = new Font("Arial", curvedTextConfig.FontSize);
-            }
-            else if (textEffect == TextEffect.BouncingTextEffect)
-            {
-                bounceTextConfig = (BounceTextEffectConfig)config;
-                stringFont = new Font("Arial", bounceTextConfig.FontSize);
-            }
-            else
-            {
-                bounceTextConfig = (BounceTextEffectConfig)config;
-                stringFont = new Font("Arial", bounceTextConfig.FontSize);
-            }
-
+            Font stringFont =  new Font("Arial", 16);
             DateTime lastVerifiedTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, 0);
-
-            List<Subtitle> subtitles = new List<Subtitle>();
-            Subtitles.SubtitlesUtility.ParseSubtitle(out subtitles, fps.SrtPath);
 
             int length, bitrate;
             GetAudioFileDetails(out bitrate, out length, fps);
@@ -75,15 +54,15 @@ namespace Game_of_Typography
             Graphics drawing = Graphics.FromImage(img);
 
            
-            SizeF textSize = drawing.MeasureString("I will follow you wherever you may be           ", stringFont);
-            textSize.Height = 400;
-            textSize.Width = 800;
+            SizeF frameSize = drawing.MeasureString("I will follow you wherever you may be           ", stringFont);
+            frameSize.Height = 400;
+            frameSize.Width = 800;
 
 
             img.Dispose();
             drawing.Dispose();
 
-            img = new Bitmap((int)textSize.Width, (int)textSize.Height);
+            img = new Bitmap((int)frameSize.Width, (int)frameSize.Height);
             drawing = Graphics.FromImage(img);
             drawing.Clear(Color.Blue);
 
@@ -99,27 +78,32 @@ namespace Game_of_Typography
             img.Dispose();
 
             Bitmap bitmap = (Bitmap)img;
-            for (int n = 1; n <= subtitles.Count(); n++)
+
+            TextEffect textEffect;
+            //stringFont.Dispose();
+            for (int n = 1; n <= subtitles.Count; n++)
             {
-                Subtitle s = subtitles.Where(i => i.Serial == n).ToList().Single();
+                Subtitle subtitle = subtitles.Where(i => i.Serial == n).ToList().Single();
+                textEffect = (TextEffect)Enum.Parse(typeof(TextEffect), subtitle.TextEffect);
 
-                bitmap = SubtitlesUtility.GetEmptyFrame(textSize);
+                Font font = new Font(subtitle.FontFamily, subtitle.FontSize);
+                bitmap = SubtitlesUtility.GetEmptyFrame(frameSize);
 
-                int emptyFrameCount = (int)((s.StartTime - lastVerifiedTime).TotalMilliseconds * frameRate / 1000);
+                int emptyFrameCount = (int)((subtitle.StartTime - lastVerifiedTime).TotalMilliseconds * frameRate / 1000);
 
                 //File.AppendAllText(@"D:\Game of Challenges\AudioToVideo\AudioToVideo\testdata\\FramesCount.txt", n.ToString() + ": " + emptyFrameCount.ToString() + "\n");
 
                 while (emptyFrameCount-- != 0)
                     aviStream.AddFrame(bitmap);
 
-                lastVerifiedTime = s.EndTime;
+                lastVerifiedTime = subtitle.EndTime;
 
                 img = new Bitmap(1, 1);
                 drawing = Graphics.FromImage(img);
                // stringFont = new Font("Arial", config.FontSize);
                 img.Dispose();
 
-                img = new Bitmap((int)textSize.Width, (int)textSize.Height);
+                img = new Bitmap((int)frameSize.Width, (int)frameSize.Height);
                 drawing = Graphics.FromImage(img);
                 drawing.Clear(Color.Blue);
                 drawing.Save();
@@ -127,17 +111,17 @@ namespace Game_of_Typography
 
                 //bitmap.Save(@"D:\Game of Challenges\AudioToVideo\AudioToVideo\testdata\\Frame" + n + ".bmp");
 
-                int frameCount = (int)((s.EndTime - s.StartTime).TotalMilliseconds * frameRate / 1000);
+                int frameCount = (int)((subtitle.EndTime - subtitle.StartTime).TotalMilliseconds * frameRate / 1000);
                 // File.AppendAllText(@"D:\Game of Challenges\AudioToVideo\AudioToVideo\testdata\\FramesCount.txt", n.ToString() + ": " + frameCount.ToString() + "\n");
 
-                int d = frameCount / s.Lyrics.Length;
+                int d = frameCount / subtitle.Lyrics.Length;
                 if (d == 1)
                     d = 2;
 
-                string[] words = s.Lyrics.Split(' ');
+                string[] words = subtitle.Lyrics.Split(' ');
                 int numberOfFrmaePerWord = frameCount / words.Length;
                 int currentIndexOfWord = 0;
-                float X = textSize.Width / 10, Y = textSize.Height / 2;
+                float X = frameSize.Width / 10, Y = frameSize.Height / 2;
 
                 for (int i = 0; i < frameCount; i++)
                 {
@@ -145,42 +129,42 @@ namespace Game_of_Typography
                     drawing.Dispose();
                     bitmap.Dispose();
 
-                    img = new Bitmap((int)textSize.Width, (int)textSize.Height);
+                    img = new Bitmap((int)frameSize.Width, (int)frameSize.Height);
                     drawing = Graphics.FromImage(img);
                     drawing.Clear(Color.Blue);
                     bitmap = (Bitmap)img;
 
                     if ((n%8 == 1 && textEffect == TextEffect.Random) || textEffect == TextEffect.CurvedTextEffect)
                     {
-                        CurveEffect(drawing, s.Lyrics, stringFont, textBrush, textSize, i);
+                        CurveEffect(drawing, subtitle.Lyrics, font, textBrush, frameSize, i);
                     }
                     else if ((n % 8 == 2 && textEffect == TextEffect.Random) || textEffect == TextEffect.BouncingTextEffect)
                     {
-                        BounceEffect(drawing, i, s.Lyrics, d, textSize, stringFont);
+                        BounceEffect(drawing, i, subtitle.Lyrics, d, frameSize, font);
                     }
                     else if ((n % 8 == 3 && textEffect == TextEffect.Random) || textEffect == TextEffect.AlternateLetterUpAndDownEffect)
                     {
-                        AlternateLetterUpAndDownEffect(drawing, i, s.Lyrics, textSize, stringFont);
+                        AlternateLetterUpAndDownEffect(drawing, i, subtitle.Lyrics, frameSize, font);
                     }
                     else if ((n % 8 == 4 && textEffect == TextEffect.Random) || textEffect == TextEffect.AngledTextEffect)
                     {
-                        var characterWidths = GetCharacterWidths(drawing, s.Lyrics, stringFont).ToArray();
+                        var characterWidths = GetCharacterWidths(drawing, subtitle.Lyrics, font).ToArray();
                         var textLength = characterWidths.Sum();
 
-                        X = (textSize.Width - textLength) / 2;
-                        Y = textSize.Height / 2;
+                        X = (frameSize.Width - textLength) / 2;
+                        Y = frameSize.Height / 2;
                         if (i <= frameCount * 6 / 10)
-                            AngledTextEffect.DrawAtAnAngleTextOfCenterAtCenterOfScreen(drawing, textSize, s.Lyrics, i, stringFont);
+                            AngledTextEffect.DrawAtAnAngleTextOfCenterAtCenterOfScreen(drawing, frameSize, subtitle.Lyrics, i, font);
                         else
-                            DrawTextAtCenter(drawing, textSize, s.Lyrics, i);
+                            DrawTextAtCenter(drawing, frameSize, subtitle.Lyrics, i, font);
                     }
                     else if ((n % 8 == 5 && textEffect == TextEffect.Random) || textEffect == TextEffect.MoveRightWithFirstFrameFreezedTextEffect)
                     {
-                        MoveRightTextEffect.MoveRightWithFirstFrameFreezed(drawing, textSize, s.Lyrics, X, Y, i, stringFont);
+                        MoveRightTextEffect.MoveRightWithFirstFrameFreezed(drawing, frameSize, subtitle.Lyrics, X, Y, i, font);
                     }
                     else if ((n % 8 == 6 && textEffect == TextEffect.Random) || textEffect == TextEffect.MoveRightWithZoomEffect)
                     {
-                        MoveRightTextEffect.MoveRightWithZoom(drawing, textSize, s.Lyrics, X, Y, i, stringFont);
+                        MoveRightTextEffect.MoveRightWithZoom(drawing, frameSize, subtitle.Lyrics, X, Y, i, font);
                     }
                     else if ((n % 8 == 7 && textEffect == TextEffect.Random) || textEffect == TextEffect.ThreeWordTextEffect)
                     {
@@ -188,7 +172,7 @@ namespace Game_of_Typography
                         int counter = numberOfFrmaePerWord;
                         if (currentIndexOfWord < words.Length)
                         {
-                            PopulateWordEffect(drawing, numberOfFrmaePerWord, currentIndexOfWord, words, textSize, count, i);
+                            PopulateWordEffect(drawing, numberOfFrmaePerWord, currentIndexOfWord, words, frameSize, count, i, font);
                             while (counter > 0 && i < frameCount)
                             {
                                 counter--;
@@ -208,10 +192,10 @@ namespace Game_of_Typography
                     }
                     else if ((n % 8 == 0 && textEffect == TextEffect.Random) || textEffect == TextEffect.LetterEffect)
                     {
-                        string text = s.Lyrics;
+                        string text = subtitle.Lyrics;
                         while (i < text.Length)
                         {
-                            var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
+                            var characterWidths = GetCharacterWidths(drawing, text, font).ToArray();
 
                             float w;
 
@@ -220,7 +204,7 @@ namespace Game_of_Typography
                             else
                                 w = i < text.Length ? characterWidths[i - 1] : characterWidths[text.Length - 1];
 
-                            LetterEffect.PopulateLetterByLetter(drawing, textSize, text, X + w, Y, i, i, stringFont);
+                            LetterEffect.PopulateLetterByLetter(drawing, frameSize, text, X + w, Y, i, i, font);
                             X += w;
                             bitmap = (Bitmap)img;
                             //bitmap.Save(@"D:\challenge\branches\atul_bounce_effect\AudioToVideo\testdata\Frame" + i + ".bmp");
@@ -252,11 +236,11 @@ namespace Game_of_Typography
             drawing.Dispose();
             bitmap.Dispose();
 
-            img = new Bitmap((int)textSize.Width, (int)textSize.Height);
+            img = new Bitmap((int)frameSize.Width, (int)frameSize.Height);
             drawing = Graphics.FromImage(img);
             drawing.Clear(Color.Blue);
 
-            bitmap = SubtitlesUtility.GetEmptyFrame(textSize);
+            bitmap = SubtitlesUtility.GetEmptyFrame(frameSize);
 
             int emptyFrameCountEnd = (int)((length - (lastVerifiedTime.Hour * 3600 + lastVerifiedTime.Minute * 60 + lastVerifiedTime.Second)) * frameRate);
 
@@ -283,7 +267,8 @@ namespace Game_of_Typography
 
             int strLength = s.Length;
             int startIndex = 0;
-            SizeF size = drawing.MeasureString(s, stringFont);
+            Font font = new Font(stringFont.FontFamily, stringFont.Size);
+            SizeF size = drawing.MeasureString(s, font);
             //float firstCoordinate = 0.0f;
             float firstCoordinate = (textSize.Width - size.Width) / 2;
 
@@ -305,7 +290,7 @@ namespace Game_of_Typography
 
             while (strLength > 0)
             {
-                firstCoordinate = BounceTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, count / 2, count % 2 * 10 + 10, outerLoopCounter == innerLoopCounter && IsJumpChar, textSize.Height);
+                firstCoordinate = BounceTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, count / 2, count % 2 * 10 + 10, outerLoopCounter == innerLoopCounter && IsJumpChar, textSize.Height, font);
                 strLength -= 32;
                 startIndex += 32;
                 drawing.Save();
@@ -322,17 +307,18 @@ namespace Game_of_Typography
                 return b;
         }
 
-        public void AlternateLetterUpAndDownEffect(Graphics drawing, int i, string s, SizeF textSize, Font stringFont)
+        public void AlternateLetterUpAndDownEffect(Graphics drawing, int i, string s, SizeF textSize, Font font)
         {
             int strLength = s.Length;
             int startIndex = 0;
+            Font stringFont = new Font(font.FontFamily, font.Size);
             SizeF size = drawing.MeasureString(s, stringFont);
             //float firstCoordinate = 0.0f;
             float firstCoordinate = (textSize.Width - size.Width) / 2;
 
             while (strLength > 0)
             {
-                firstCoordinate = AlternateLetterUpAndDownTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, textSize.Height);
+                firstCoordinate = AlternateLetterUpAndDownTextEffect.MeasureCharacterRangesRegions(drawing, s.Substring(startIndex, Min(strLength, 32)), firstCoordinate, i, textSize.Height, stringFont);
                 strLength -= 32;
                 startIndex += 32;
                 drawing.Save();
@@ -351,7 +337,7 @@ namespace Game_of_Typography
             }
         }
 
-        public void DrawTextAtCenter(Graphics drawing, SizeF textSize, string text, int i)
+        public void DrawTextAtCenter(Graphics drawing, SizeF textSize, string text, int i, Font font)
         {
             float j = (float)i / (float)8.0;
             float k = (float)j;
@@ -365,7 +351,7 @@ namespace Game_of_Typography
             float X, Y;
 
             //Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize + k);
-            Font stringFont = new Font("Arial", (Math.Abs((float)40.0 - (float)(i + 1)) == 0) ? 1 : Math.Abs((float)40.0 - (float)(i + 1)));
+            Font stringFont = new Font(font.FontFamily, (Math.Abs((float)40.0 - (float)(i + 1)) == 0) ? 1 : Math.Abs((float)40.0 - (float)(i + 1)));
             Brush textBrush = new SolidBrush(Color.White);
 
             var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
@@ -390,12 +376,10 @@ namespace Game_of_Typography
             return text.Select(c => c == ' ' ? spaceLength : graphics.MeasureString(c.ToString(), font, Point.Empty, StringFormat.GenericTypographic).Width);
         }
 
-        private static void PopulateWordEffect(Graphics drawing, int numberOfFrmaePerWord, int currentIndexOfWord, string[] words, SizeF textSize, int count, int i)
+        private static void PopulateWordEffect(Graphics drawing, int numberOfFrmaePerWord, int currentIndexOfWord, string[] words, SizeF textSize, int count, int i, Font font)
         {
             float X, Y;
-            Font stringFont = new Font("Times New Roman", (float)70.0);
-
-            stringFont = new Font("Times New Roman", (float)70.0);
+            Font stringFont = new Font(font.FontFamily, (float)70.0);
             SizeF size = drawing.MeasureString(words[currentIndexOfWord], stringFont);
             X = textSize.Width * 2 / 10;
             Y = (textSize.Height - size.Height) / 2 + textSize.Height/5;
@@ -407,7 +391,7 @@ namespace Game_of_Typography
 
             if (currentIndexOfWord - 1 >= 0)
             {
-                stringFont = new Font("Times New Roman", (float)50.0);
+                stringFont = new Font(font.FontFamily, (float)50.0);
                 size = drawing.MeasureString(words[currentIndexOfWord-1], stringFont);
 
                 if(count <  numberOfFrmaePerWord/2)
@@ -421,7 +405,7 @@ namespace Game_of_Typography
 
             if (currentIndexOfWord - 2 >= 0)
             {
-                stringFont = new Font("Times New Roman", (float)30.0);
+                stringFont = new Font(font.FontFamily, (float)30.0);
                 size = drawing.MeasureString(words[currentIndexOfWord - 2], stringFont);
 
                 if (count < numberOfFrmaePerWord / 2)
@@ -435,7 +419,7 @@ namespace Game_of_Typography
 
             if (currentIndexOfWord - 3 >= 0)
             {
-                stringFont = new Font("Times New Roman", (float)20.0);
+                stringFont = new Font(font.FontFamily, (float)20.0);
                 size = drawing.MeasureString(words[currentIndexOfWord - 3], stringFont);
 
                 if (count < numberOfFrmaePerWord / 2)

@@ -3,18 +3,17 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:c="clr-namespace:Game_of_Typography"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         Title="MainWindow" Height="550" Width="725">
     <Window.Resources>
         <c:FilePaths x:Key="FilePaths"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
     
     <xctk:Wizard FinishButtonClosesWindow="True" PageChanged="Wizard_PageChanged" Name="wz">
         <xctk:WizardPage x:Name="IntroPage" 
                                    Title="Welcome to Game of Typography (GOT)"
                                    Description="Create a video from Subtitles and Audio file... with some effects on text">
-           
-                         
-
         </xctk:WizardPage>
         <xctk:WizardPage x:Name="Page1" PageType="Interior"
                                    Title="Specify I/O file path">
@@ -64,33 +63,64 @@
 
                 <Grid Name="grdCreateVideo">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="391*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Label Content="Select Text Effect" Grid.Row="0" HorizontalAlignment="Left"></Label>
-                    <ComboBox Name="cmbTextEffect" Height="20" Width="150" HorizontalAlignment="Left" Margin="136,0,0,10" SelectionChanged="cmbTextEffect_SelectionChanged">
-                        <ComboBoxItem>Curved Text Effect</ComboBoxItem>
-                        <ComboBoxItem>Bounce Text Effect</ComboBoxItem>
-                        <ComboBoxItem>Alternate Letter Up And Down Effect</ComboBoxItem>
-                        <ComboBoxItem>Angled Text Effect</ComboBoxItem>
-                        <ComboBoxItem>Three Word Text Effect</ComboBoxItem>
-                        <ComboBoxItem>Move Right With Zoom Text Effect</ComboBoxItem>
-                        <ComboBoxItem>Move Right With First Frame Freezed Text Effect</ComboBoxItem>
-                        <ComboBoxItem>Produce line letter By letter effect</ComboBoxItem>
-                        <ComboBoxItem>Random</ComboBoxItem>
-                    </ComboBox>
-                    <Button Name="btnConfig" Width="120" Grid.Row="1"  Click="btnConfig_Click" Height="24" VerticalAlignment="Top">Configure</Button>
-                    <Button Name="btnCreateVideo" Click="btnCreateVideo_Click" Width="100" Content="Create Video" Grid.Row="2" HorizontalAlignment="Left" Margin="157,0,0,0">
-                    </Button>
-                    <TextBlock
-  Name="txtVideoStatus"
-  Margin="20,0" 
-  Width="480" FontSize="16" FontWeight="Bold" Foreground="Maroon" Grid.Row="3">
-  Creating Video....
-                    </TextBlock>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="30,0,0,0">
+                        <RadioButton x:Name="rbEffectsPerFile" Content="Set a single effect for all subtitle lines" IsChecked="True"/>
+                        <RadioButton x:Name="rbEffectsPerLine"  Margin="10,0,0,0" Content="Set a different effect for each subtitle line"/>
+                    </StackPanel>
+                    <Grid Margin="30" Grid.Row="1" Visibility="{Binding IsChecked, ElementName=rbEffectsPerFile, Converter={StaticResource BoolToVis}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Select Text Effect" HorizontalAlignment="Left"></Label>
+                        <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,0,0,0" x:Name="cmbTextEffectForAllLines" Height="20" Width="150" HorizontalAlignment="Left" SelectionChanged="cmbTextEffectForAllLines_SelectionChanged"></ComboBox>
+                        <Label Grid.Row="1" Grid.Column="0" Content="Font size" HorizontalAlignment="Left"></Label>
+                        <TextBox x:Name="txtFontSizeForAllLines" Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" TextChanged="txtFontSizeForAllLines_TextChanged" Width="150" HorizontalAlignment="Left"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0" Content="Select Font family" HorizontalAlignment="Left"></Label>
+                        <ComboBox Grid.Row="2" Grid.Column="1" Margin="10,0,0,0" x:Name="cmbFontFamilyForAllLines" Height="20" Width="150" HorizontalAlignment="Left" SelectionChanged="cmbFontFamilyForAllLines_SelectionChanged"></ComboBox>
+                        <!--<Button Name="btnConfig" Width="120" Grid.Row="1"  Click="btnConfig_Click" Height="24" VerticalAlignment="Top">Configure</Button>-->
+                    </Grid>
+
+                    <telerik:RadGridView Margin="30" Grid.Row="2" x:Name="RadGridViewConfiguration" IsFilteringAllowed="False" CanUserSortColumns="False" CanUserReorderColumns="False"
+                             CanUserSortGroups="False" ShowGroupPanel="False" AutoGenerateColumns="False" GroupRenderMode="Flat" Height="Auto" Width="Auto"
+                             CanUserFreezeColumns="False" MaxHeight="200" MaxWidth="650" ScrollMode="Deferred" RowIndicatorVisibility="Collapsed"  HorizontalAlignment="Left" 
+                             Visibility="{Binding IsChecked, ElementName=rbEffectsPerLine, Converter={StaticResource BoolToVis}}" Background="WhiteSmoke">
+                        <telerik:RadGridView.Columns>
+                            <telerik:GridViewDataColumn  Header="Line Number" DataMemberBinding="{Binding Serial}" Width="100" IsReadOnly="True" />
+                            <telerik:GridViewComboBoxColumn Header="Text Effect"  DataMemberBinding="{Binding TextEffect}" Width="200" MaxWidth="300" ItemsSource="{Binding ItemsSource, ElementName=cmbTextEffectForAllLines}" />
+                            <telerik:GridViewDataColumn  Header="Font Size"  Width="100" DataMemberBinding="{Binding FontSize}"/>
+                            <telerik:GridViewComboBoxColumn Header="Font Family"  DataMemberBinding="{Binding FontFamily}" Width="100" MaxWidth="300" ItemsSource="{Binding ItemsSource, ElementName=cmbFontFamilyForAllLines}" />
+                        </telerik:RadGridView.Columns>
+                    </telerik:RadGridView>
+                    <StackPanel Orientation="Horizontal"  Grid.Row="3">
+                        <Button Name="btnCreateVideo" Click="btnCreateVideo_Click" Width="100" Content="Create Video" HorizontalAlignment="Left" Margin="30,10,0,0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsChecked,ElementName=rbEffectsPerFile,FallbackValue=False}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsChecked,ElementName=rbEffectsPerLine,FallbackValue=False}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <TextBlock Name="txtVideoStatus" Margin="10,10,0,0" Width="480" FontSize="12" FontWeight="Bold" Foreground="Red">Creating Video...</TextBlock>
+                    </StackPanel>
                 </Grid>
             </xctk:WizardPage.Content>
         </xctk:WizardPage>

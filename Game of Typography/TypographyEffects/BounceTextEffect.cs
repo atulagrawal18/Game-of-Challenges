@@ -13,7 +13,7 @@ namespace TypographyEffects
 {
     public static class BounceTextEffect
     {
-        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, int indexToBeJumped, int heightToBeJumped, bool flag, float Y)
+        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, int indexToBeJumped, int heightToBeJumped, bool flag, float Y, Font font)
         {
             Graphics g = graphics;
             string measureString = text;
@@ -43,7 +43,7 @@ namespace TypographyEffects
 
             //
             // The font to use.. 'using' will dispose of it for us
-            using (Font stringFont = new Font("Times New Roman", 32.0F))
+            using (Font stringFont = new Font(font.FontFamily, font.Size))
             {
 
                 //
