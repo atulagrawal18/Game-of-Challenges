@@ -199,6 +199,8 @@ namespace Game_of_Typography
 
         private void txtFontSizeForAllLines_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtFontSizeForAllLines.Text))
+                return;
             float fontSize = Convert.ToSingle(txtFontSizeForAllLines.Text);
             Subtitles.ForEach(s => { s.FontSize = fontSize; });
         }

@@ -20,7 +20,7 @@ namespace TypographyEffects
             Y = textSize.Height / 2;
 
             //Rectangle r = new Rectangle((int)X + i * 4 + 30, (int)Y, (int)txt_size.Width - i * 4 - 30, (int)txt_size.Height);
-            //Brush textBrush = new LinearGradientBrush(r, Color.Red, Color.Blue, 0f);
+            //Brush textBrush = new LinearGradientBrush(r, Color.Red, Color.White, 0f);
             Brush textBrush = new SolidBrush(Color.Black);
 
             if (currentIndex == 0)

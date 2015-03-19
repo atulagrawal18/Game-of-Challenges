@@ -82,7 +82,7 @@ namespace TypographyEffects
                     }
 
                     g.DrawString(measureString.Substring(indx, 1),
-                          stringFont, Brushes.White, rect, stringFormat);
+                          stringFont, Brushes.Black, rect, stringFormat);
                 }
 
                 g.Save();

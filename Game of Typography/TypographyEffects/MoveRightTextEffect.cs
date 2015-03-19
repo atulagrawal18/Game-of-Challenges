@@ -12,7 +12,7 @@ namespace TypographyEffects
         public static void MoveRightWithFirstFrameFreezed(Graphics drawing, SizeF textSize, string text, float X, float Y, int i, Font stringFont)
         {
             Font font = new Font(stringFont.FontFamily, stringFont.Size);
-            Brush textBrush = new SolidBrush(Color.White);
+            Brush textBrush = new SolidBrush(Color.Black);
 
             drawing.DrawString(text, font, textBrush, X, Y);
             drawing.DrawString(text, font, textBrush, new Point((int)(X + i * 10), (int)Y), StringFormat.GenericTypographic);
@@ -36,7 +36,7 @@ namespace TypographyEffects
 
             if(stringFont.Size >= 30.0f)
                 font = new Font(stringFont.FontFamily, stringFont.Size + k - 15.0f);
-            Brush textBrush = new SolidBrush(Color.White);
+            Brush textBrush = new SolidBrush(Color.Black);
 
             var characterWidths = GetCharacterWidths(drawing, text, font).ToArray();
             var textLength = characterWidths.Sum();

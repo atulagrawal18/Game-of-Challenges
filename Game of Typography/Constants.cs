@@ -9,8 +9,8 @@ namespace Game_of_Typography
     {
         CurvedTextEffect,
         BouncingTextEffect,
-        AlternateLetterUpAndDownEffect,
-        AngledTextEffect,
+        DancingLettersEffect,
+        ZoomTextEffect,
         ThreeWordTextEffect,
         MoveRightWithZoomEffect,
         MoveRightWithFirstFrameFreezedTextEffect,

@@ -24,8 +24,6 @@
                         <RowDefinition Height="30"></RowDefinition>
                         <RowDefinition Height="30"></RowDefinition>
                         <RowDefinition Height="30"></RowDefinition>
-                        <RowDefinition Height="30"></RowDefinition>
-                        <RowDefinition Height="361*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition ></ColumnDefinition>
@@ -38,19 +36,19 @@
                     <Button Name="btnSrtFile" Content="Open Subtitle File" Grid.Column="2" Width="104" HorizontalAlignment="Left" Margin="6,6,0,0"
                         Click="btnSrtFile_Click"></Button>
 
-                    <Label Content="BMP Image file : " Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,21,1" Width="107"></Label>
+                    <!--<Label Content="BMP Image file : " Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,21,1" Width="107"></Label>
                     <TextBox Name="txtBmpFile" Grid.Column="1" Grid.Row="1" Margin="6,6,0,0" Text="{Binding Path=BmpPath}"></TextBox>
                     <Button Name="btnBmpFile" Content="Open BMP File" Grid.Column="2" Grid.Row="1"  Width="104" HorizontalAlignment="Left" Margin="6,6,0,0"
-                        Click="btnBmpFile_Click"></Button>
+                        Click="btnBmpFile_Click"></Button>-->
 
-                    <Label Content="Audio file : " Grid.Row="2" HorizontalAlignment="Right" Margin="0,5,33,1"></Label>
-                    <TextBox Name="txtAudioFile" Grid.Column="1" Grid.Row="2" Margin="6,6,0,0" Text="{Binding Path=AudioPath}"></TextBox>
-                    <Button Name="btnAudioFile" Content="Open Audio File" Grid.Column="2" Grid.Row="2" Width="104" HorizontalAlignment="Left" Margin="6,6,0,0"
+                    <Label Content="Audio file : " Grid.Row="1" HorizontalAlignment="Right" Margin="0,5,33,1"></Label>
+                    <TextBox Name="txtAudioFile" Grid.Column="1" Grid.Row="1" Margin="6,6,0,0" Text="{Binding Path=AudioPath}"></TextBox>
+                    <Button Name="btnAudioFile" Content="Open Audio File" Grid.Column="2" Grid.Row="1" Width="104" HorizontalAlignment="Left" Margin="6,6,0,0"
                         Click="btnAudioFile_Click"></Button>
 
-                    <Label Content="Output Video file : " Grid.Row="3" HorizontalAlignment="Right" Margin="0,4,32,2"></Label>
-                    <TextBox Name="txtVideoFile" Grid.Column="1" Grid.Row="3" Margin="6,6,0,0" Text="{Binding Path=VideoPath}"></TextBox>
-                    <Button Name="btnVideoFile" Content="Open Video File" Grid.Column="2" Grid.Row="3" Width="104" HorizontalAlignment="Left" Margin="6,6,0,0"
+                    <Label Content="Output Video file : " Grid.Row="2" HorizontalAlignment="Right" Margin="0,4,32,2"></Label>
+                    <TextBox Name="txtVideoFile" Grid.Column="1" Grid.Row="2" Margin="6,6,0,0" Text="{Binding Path=VideoPath}"></TextBox>
+                    <Button Name="btnVideoFile" Content="Open Video File" Grid.Column="2" Grid.Row="2" Width="104" HorizontalAlignment="Left" Margin="6,6,0,0"
                         Click="btnVideoFile_Click"></Button>
                 </Grid>
             </xctk:WizardPage.Content>

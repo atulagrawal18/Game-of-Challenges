@@ -13,7 +13,7 @@ namespace TypographyEffects
 {
     public static class AlternateLetterUpAndDownTextEffect
     {
-        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, float Y, Font stringFont)
+        public static float MeasureCharacterRangesRegions(Graphics graphics, string text, float X, int level, float Y, Font font)
         {
             Graphics g = graphics;
             string measureString = text;
@@ -43,7 +43,7 @@ namespace TypographyEffects
 
             //
             // The font to use.. 'using' will dispose of it for us
-            using (stringFont)
+            using (Font stringFont = new Font(font.FontFamily, font.Size))
             {
 
                 //
@@ -71,32 +71,45 @@ namespace TypographyEffects
                     Region region = stringRegions[indx] as Region;
                     RectangleF rect = region.GetBounds(g);
 
+                    //float[] numbers = new float[] {.5f,1,1.5f,2,2.5f,3,3.5f,4,4.5f,5,5.5f,6,5.5f,5,4.5f,4,3.5f,3,2.5f,2,1.5f,1,.5f,0};
+
+                    float[] numbers = GetNumberArray(.05f, 2);
+
                     if (level % 2 == 0)
                     {
                         if (indx % 2 == 0)
                         {
-                            rect.Offset(0f, (float)5.0f);
+                            float y_height = numbers[level % numbers.Length];
+                            rect.Offset(0f, y_height);
+                            //rect.Offset(0f, (float)5.0f);
                         }
                         else
                         {
-                            rect.Offset(0f, -(float)5.0f);
+                            float y_height = numbers[level % numbers.Length];
+                            rect.Offset(0f, -y_height);
+                            //rect.Offset(0f, (float)5.0f);
                         }
                     }
                     else
                     {
                         if (indx % 2 == 0)
                         {
-                            rect.Offset(0f, -(float)5.0f);
+                            float y_height = numbers[level % numbers.Length];
+                            rect.Offset(0f, -y_height);
+                            //rect.Offset(0f, (float)5.0f);
                         }
                         else
                         {
-                            rect.Offset(0f, (float)5.0f);
+                            float y_height = numbers[level % numbers.Length];
+                            rect.Offset(0f, y_height);
+                            //rect.Offset(0f, (float)5.0f);
                         }
                     }
 
                     g.DrawString(measureString.Substring(indx, 1),
-                          stringFont, Brushes.White, rect, stringFormat);
+                          stringFont, Brushes.Black, rect, stringFormat);
                 }
+            
 
                 g.Save();
 
@@ -104,6 +117,25 @@ namespace TypographyEffects
                 RectangleF rectLast = regionLast.GetBounds(g);
                 return rectLast.X + rectLast.Width - 10.0f;
             }
+        }
+
+        public static float[] GetNumberArray(float gap, float max)
+        { 
+            float number = gap;
+            List<float> numberList = new List<float>();
+            while (number <= max)
+            {
+                numberList.Add(number);
+                number += gap;
+            }
+
+            while (number > 0)
+            {
+                number -= gap;
+                numberList.Add(number);
+            }
+
+            return numberList.ToArray();
         }
     }
 }
