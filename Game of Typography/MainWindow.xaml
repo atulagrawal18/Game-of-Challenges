@@ -90,15 +90,16 @@
                         <!--<Button Name="btnConfig" Width="120" Grid.Row="1"  Click="btnConfig_Click" Height="24" VerticalAlignment="Top">Configure</Button>-->
                     </Grid>
 
-                    <telerik:RadGridView Margin="30" Grid.Row="2" x:Name="RadGridViewConfiguration" IsFilteringAllowed="False" CanUserSortColumns="False" CanUserReorderColumns="False"
-                             CanUserSortGroups="False" ShowGroupPanel="False" AutoGenerateColumns="False" GroupRenderMode="Flat" Height="Auto" Width="Auto"
+                    <telerik:RadGridView Margin="30" Width="600" Grid.Row="2" x:Name="RadGridViewConfiguration" IsFilteringAllowed="False" CanUserSortColumns="False" CanUserReorderColumns="False"
+                             CanUserSortGroups="False" ShowGroupPanel="False" AutoGenerateColumns="False" GroupRenderMode="Flat" Height="Auto" 
                              CanUserFreezeColumns="False" MaxHeight="200" MaxWidth="650" ScrollMode="Deferred" RowIndicatorVisibility="Collapsed"  HorizontalAlignment="Left" 
                              Visibility="{Binding IsChecked, ElementName=rbEffectsPerLine, Converter={StaticResource BoolToVis}}" Background="WhiteSmoke">
                         <telerik:RadGridView.Columns>
-                            <telerik:GridViewDataColumn  Header="Line Number" DataMemberBinding="{Binding Serial}" Width="100" IsReadOnly="True" />
-                            <telerik:GridViewComboBoxColumn Header="Text Effect"  DataMemberBinding="{Binding TextEffect}" Width="200" MaxWidth="300" ItemsSource="{Binding ItemsSource, ElementName=cmbTextEffectForAllLines}" />
-                            <telerik:GridViewDataColumn  Header="Font Size"  Width="100" DataMemberBinding="{Binding FontSize}"/>
-                            <telerik:GridViewComboBoxColumn Header="Font Family"  DataMemberBinding="{Binding FontFamily}" Width="100" MaxWidth="300" ItemsSource="{Binding ItemsSource, ElementName=cmbFontFamilyForAllLines}" />
+                            <telerik:GridViewDataColumn  Header="No." DataMemberBinding="{Binding Serial}" IsReadOnly="True" />
+                            <telerik:GridViewComboBoxColumn Header="Text Effect"  DataMemberBinding="{Binding TextEffect}" MaxWidth="300" ItemsSource="{Binding ItemsSource, ElementName=cmbTextEffectForAllLines}" />
+                            <telerik:GridViewDataColumn  Header="Size"  DataMemberBinding="{Binding FontSize}"/>
+                            <telerik:GridViewComboBoxColumn Header="Font Family"  DataMemberBinding="{Binding FontFamily}"  MaxWidth="300" ItemsSource="{Binding ItemsSource, ElementName=cmbFontFamilyForAllLines}" />
+                            <telerik:GridViewDataColumn  Header="Lyrics" DataMemberBinding="{Binding Lyrics}" IsReadOnly="True" Width="*" />
                         </telerik:RadGridView.Columns>
                     </telerik:RadGridView>
                     <StackPanel Orientation="Horizontal"  Grid.Row="3">
