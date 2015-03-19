@@ -43,7 +43,7 @@ namespace TypographyEffects
 
             //
             // The font to use.. 'using' will dispose of it for us
-            using (Font stringFont = new Font(font.FontFamily, font.Size))
+            using (Font stringFont = new Font(font.FontFamily, font.Size, FontStyle.Bold))
             {
 
                 //
@@ -107,7 +107,7 @@ namespace TypographyEffects
                     }
 
                     g.DrawString(measureString.Substring(indx, 1),
-                          stringFont, Brushes.Black, rect, stringFormat);
+                          stringFont, Brushes.White, rect, stringFormat);
                 }
             
 

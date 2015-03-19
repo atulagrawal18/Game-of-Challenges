@@ -22,7 +22,7 @@ namespace TypographyEffects
 
             Font font = new Font(stringFont.FontFamily, stringFont.Size + k);
             //Font font = new Font("Arial", k+(float)0.25);
-            Brush textBrush = new SolidBrush(Color.Black);
+            Brush textBrush = new SolidBrush(Color.White);
 
             //var characterWidths = GetCharacterWidths(drawing, text, font).ToArray();
             //var textLength = characterWidths.Sum();
@@ -46,7 +46,7 @@ namespace TypographyEffects
             //Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize + k);
             //Font stringFont = new Font(font.FontFamily, (Math.Abs((float)40.0 - (float)(i + 1)) == 0) ? 1 : Math.Abs((float)40.0 - (float)(i + 1)));
             Font stringFont = new Font(font.FontFamily, size);
-            Brush textBrush = new SolidBrush(Color.Black);
+            Brush textBrush = new SolidBrush(Color.White);
 
             var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
             var textLength = characterWidths.Sum();

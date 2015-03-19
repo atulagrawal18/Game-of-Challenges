@@ -64,9 +64,9 @@ namespace Game_of_Typography
 
             img = new Bitmap((int)frameSize.Width, (int)frameSize.Height);
             drawing = Graphics.FromImage(img);
-            drawing.Clear(Color.White);
+            drawing.Clear(Color.Red);
 
-            Brush textBrush = new SolidBrush(Color.Black);
+            Brush textBrush = new SolidBrush(Color.White);
 
             drawing.DrawString("", stringFont, textBrush, 0, 0);
             drawing.Save();
@@ -105,7 +105,7 @@ namespace Game_of_Typography
 
                 img = new Bitmap((int)frameSize.Width, (int)frameSize.Height);
                 drawing = Graphics.FromImage(img);
-                drawing.Clear(Color.White);
+                drawing.Clear(Color.Red);
                 drawing.Save();
                 bitmap.Dispose();
 
@@ -157,7 +157,7 @@ namespace Game_of_Typography
 
                     img = new Bitmap((int)frameSize.Width, (int)frameSize.Height);
                     drawing = Graphics.FromImage(img);
-                    drawing.Clear(Color.White);
+                    drawing.Clear(Color.Red);
                     bitmap = (Bitmap)img;
 
                     if ((n%8 == 1 && textEffect == TextEffect.Random) || textEffect == TextEffect.CurvedTextEffect)
@@ -265,7 +265,7 @@ namespace Game_of_Typography
 
             img = new Bitmap((int)frameSize.Width, (int)frameSize.Height);
             drawing = Graphics.FromImage(img);
-            drawing.Clear(Color.White);
+            drawing.Clear(Color.Red);
 
             bitmap = SubtitlesUtility.GetEmptyFrame(frameSize);
 
@@ -371,7 +371,7 @@ namespace Game_of_Typography
             //Font stringFont = new Font("Arial", Properties.Settings.Default.FontSize + k);
             //Font stringFont = new Font(font.FontFamily, (Math.Abs((float)40.0 - (float)(i + 1)) == 0) ? 1 : Math.Abs((float)40.0 - (float)(i + 1)));
             Font stringFont = new Font(font.FontFamily, size);
-            Brush textBrush = new SolidBrush(Color.Black);
+            Brush textBrush = new SolidBrush(Color.White);
 
             var characterWidths = GetCharacterWidths(drawing, text, stringFont).ToArray();
             var textLength = characterWidths.Sum();
